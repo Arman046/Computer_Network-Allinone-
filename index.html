@@ -225,6 +225,25 @@
         .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
         .fade-in.visible { opacity: 1; transform: translateY(0); }
 
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body { overflow-x: hidden; }
+            .app-container { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--sidebar-border); padding: 1rem; z-index: 10; }
+            .nav-links { flex-direction: row; overflow-x: auto; white-space: nowrap; padding-bottom: 0.5rem; gap: 10px; -webkit-overflow-scrolling: touch; }
+            .nav-links a { display: inline-block; padding: 0.5rem 1rem; }
+            .student-features { flex-direction: row; overflow-x: auto; white-space: nowrap; padding-bottom: 0.5rem; -webkit-overflow-scrolling: touch; }
+            .main-content { padding: 1rem; margin: 0; width: 100%; box-sizing: border-box; }
+            .page-header h2 { font-size: 2rem; }
+            .notebook-page { padding: 25px 15px 25px 35px; margin-bottom: 2rem; font-size: 1rem; }
+            .notebook-page::before { left: 20px; }
+            .question-title { font-size: 1.2rem; }
+            .comparison-table { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+            svg { max-width: 100%; height: auto; }
+            .diagram-container { padding: 15px; }
+            .action-btn { font-size: 0.8rem; padding: 6px 12px; }
+        }
+
         /* Print Mode */
         @media print {
             body { background: white; color: black; }
