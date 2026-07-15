@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer Network Exam Notes | Vidyasagar University</title>
+    <style>
+        /* Apple WWDC Style Design System */
+        :root {
+            --bg-color: #f5f5f7;
+            --sidebar-bg: rgba(255, 255, 255, 0.7);
+            --sidebar-border: rgba(255, 255, 255, 0.5);
+            --glass-blur: blur(20px);
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+            --accent-color: #0066cc;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.06);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            
+            /* Notebook Aesthetic */
+            --page-bg: #fdfdf8;
+            --rule-color: #e0e0e0;
+            --margin-line: #ff7070;
+            --ink-color: #113264;
+            --heading-ink: #000000;
+            --highlight: rgba(255, 235, 59, 0.4);
+            --red-ink: #c8102e;
+            --font-hand: 'Comic Sans MS', 'Chalkboard SE', 'Bradley Hand', cursive;
+            --font-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #000000;
+            --sidebar-bg: rgba(30, 30, 30, 0.6);
+            --sidebar-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #f5f5f7;
+            --text-secondary: #a1a1a6;
+            --accent-color: #2997ff;
+            --card-bg: rgba(28, 28, 30, 0.8);
+            --page-bg: #1c1c1e;
+            --rule-color: #333333;
+            --margin-line: #a83232;
+            --ink-color: #88c0d0;
+            --heading-ink: #f5f5f7;
+            --highlight: rgba(255, 215, 0, 0.2);
+            --red-ink: #ff6b6b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-ui);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            transition: var(--transition);
+            display: flex;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Reading Progress */
+        #progress-bar {
+            position: fixed; top: 0; left: 0; height: 4px; background: var(--accent-color);
+            z-index: 1000; width: 0%; transition: width 0.1s ease;
+        }
+
+        /* App Layout */
+        .app-container { display: flex; width: 100vw; min-height: 100vh; }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 300px; height: 100vh; position: sticky; top: 0;
+            background: var(--sidebar-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+            border-right: 1px solid var(--sidebar-border); padding: 2rem 1.5rem;
+            display: flex; flex-direction: column; gap: 1.5rem; z-index: 100; overflow-y: auto;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.25rem; font-weight: 600; letter-spacing: -0.5px; margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--accent-color), #bc52ee);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        
+        .sidebar-header p { font-size: 0.85rem; color: var(--text-secondary); }
+
+        .search-box { position: relative; }
+        .search-box input {
+            width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem; border-radius: 12px;
+            border: 1px solid var(--sidebar-border); background: var(--bg-color);
+            color: var(--text-primary); font-size: 0.9rem; outline: none; transition: var(--transition);
+        }
+        .search-box input:focus { box-shadow: 0 0 0 2px var(--accent-color); }
+        .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); opacity: 0.5; }
+
+        .nav-links { display: flex; flex-direction: column; gap: 0.25rem; }
+        .nav-links a {
+            text-decoration: none; color: var(--text-primary); font-size: 0.95rem;
+            padding: 0.6rem 1rem; border-radius: 8px; transition: var(--transition);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-links a:hover, .nav-links a.active { background: var(--accent-color); color: white; }
+
+        .student-features { margin-top: auto; display: flex; flex-direction: column; gap: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--sidebar-border); }
+        .feature-btn {
+            background: transparent; border: 1px solid var(--text-secondary); color: var(--text-primary);
+            padding: 0.6rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem;
+            transition: var(--transition); display: flex; align-items: center; gap: 8px;
+        }
+        .feature-btn:hover { background: var(--text-secondary); color: var(--bg-color); }
+
+        /* Main Content */
+        .main-content { flex: 1; padding: 2rem 4rem; max-width: 1100px; margin: 0 auto; }
+        .page-header { text-align: center; margin-bottom: 3rem; animation: fadeInDown 1s ease; }
+        .page-header h2 { font-size: 3rem; font-weight: 700; letter-spacing: -1px; margin-bottom: 1rem; }
+
+        .glass-card {
+            background: var(--card-bg); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: 20px; padding: 2rem; box-shadow: var(--shadow-soft); margin-bottom: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.2); transition: transform 0.3s ease;
+        }
+        .glass-card:hover { transform: translateY(-5px); }
+
+        /* Handwriting Notebook Aesthetic */
+        .notebook-page {
+            background-color: var(--page-bg);
+            background-image: linear-gradient(var(--rule-color) 1px, transparent 1px);
+            background-size: 100% 32px; background-position: 0 40px;
+            border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 40px 40px 40px 60px; position: relative;
+            font-family: var(--font-hand); font-size: 1.15rem; line-height: 32px;
+            color: var(--ink-color); margin-bottom: 4rem; transition: var(--transition); overflow: hidden;
+        }
+        .notebook-page::before {
+            content: ''; position: absolute; top: 0; left: 50px; bottom: 0;
+            width: 2px; background-color: var(--margin-line); z-index: 1;
+        }
+
+        .question-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;
+            padding-bottom: 0.5rem; border-bottom: 2px solid var(--heading-ink); position: relative; z-index: 2;
+        }
+        .question-title { color: var(--heading-ink); font-size: 1.4rem; font-weight: bold; }
+        .marks-badge {
+            background: var(--red-ink); color: white; padding: 2px 10px; border-radius: 12px;
+            font-size: 0.9rem; font-family: var(--font-ui); font-weight: bold; transform: rotate(-3deg);
+        }
+
+        .answer-content { position: relative; z-index: 2; }
+        .answer-content p { margin-bottom: 16px; }
+
+        /* Explanation Styling for Beginners */
+        .explain-simple {
+            background: rgba(0, 153, 204, 0.1); border-left: 4px solid var(--accent-color);
+            padding: 15px 20px; margin-bottom: 20px; border-radius: 4px 12px 12px 4px;
+            font-family: var(--font-ui); color: var(--text-primary); font-size: 1.05rem; line-height: 1.5;
+        }
+        .explain-simple::before {
+            content: "👶 In Simple Words:"; display: block; font-weight: bold;
+            color: var(--accent-color); margin-bottom: 5px; font-size: 0.95rem; text-transform: uppercase;
+        }
+        [data-theme="dark"] .explain-simple { background: rgba(0, 153, 204, 0.15); color: #e0e0e0; }
+
+        .analogy-box {
+            background: rgba(255, 152, 0, 0.1); border: 2px dashed #ff9800;
+            padding: 15px 20px; border-radius: 8px; margin: 20px 0; transform: rotate(1deg);
+        }
+        .analogy-box::before {
+            content: "💡 Real-World Analogy:"; display: block; font-weight: bold;
+            color: #f57c00; margin-bottom: 5px; font-family: var(--font-ui); font-size: 0.9rem; text-transform: uppercase;
+        }
+
+        .exam-note {
+            background: rgba(255, 0, 0, 0.05); border-left: 4px solid var(--red-ink);
+            padding: 15px 20px; margin: 20px 0; font-family: var(--font-ui);
+        }
+        .exam-note::before {
+            content: '🚨 Very Important / Examiner Tip'; display: block; font-weight: bold;
+            color: var(--red-ink); margin-bottom: 5px; font-size: 0.8rem; text-transform: uppercase;
+        }
+
+        /* Handwritten Elements */
+        .keyword { color: var(--red-ink); font-weight: bold; }
+        .highlight { background-color: var(--highlight); padding: 0 4px; border-radius: 4px; }
+        .heading-sub { color: var(--heading-ink); font-weight: bold; font-size: 1.3rem; text-decoration: underline; margin: 1.5rem 0 0.5rem 0; display: block; }
+        
+        ul { list-style-type: none; padding-left: 20px; margin-bottom: 1rem; }
+        ul li { position: relative; padding-left: 25px; margin-bottom: 8px; }
+        ul li::before { content: '→'; position: absolute; left: 0; color: var(--red-ink); font-weight: bold; }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; background: transparent; }
+        .comparison-table th, .comparison-table td { border: 2px solid var(--heading-ink); padding: 10px 15px; text-align: left; line-height: 24px; }
+        .comparison-table th { background: rgba(0,0,0,0.05); font-weight: bold; color: var(--heading-ink); font-size: 1.2rem; }
+
+        /* Hand-drawn SVG Container */
+        .diagram-container {
+            margin: 2rem 0; text-align: center; background: rgba(255,255,255,0.8);
+            padding: 30px; border-radius: 12px; border: 2px solid #ccc;
+            box-shadow: 4px 4px 15px rgba(0,0,0,0.05); position: relative;
+        }
+        [data-theme="dark"] .diagram-container { background: #fdfdf8; /* Keep diagrams light for paper feel */ border: 2px solid #555; }
+        
+        .diagram-caption { font-size: 1rem; color: #333; margin-top: 15px; font-style: italic; font-weight: bold; }
+        
+        /* Hand-drawn SVG strokes */
+        .svg-hand {
+            stroke: #113264;
+            stroke-width: 2.5;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        /* Random dashed pattern to simulate imperfect pencil sketching */
+        .svg-sketch { stroke-dasharray: 60 2 20 1 40 1; }
+        .svg-text { font-family: var(--font-hand); font-size: 16px; fill: #113264; font-weight: bold; }
+        .svg-highlight { fill: rgba(255, 107, 107, 0.2); stroke: var(--red-ink); stroke-width: 2; stroke-dasharray: 5,5;}
+
+        /* Actions */
+        .answer-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; position: relative; z-index: 5; font-family: var(--font-ui); }
+        .action-btn { background: var(--bg-color); border: 1px solid var(--sidebar-border); color: var(--text-primary); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: var(--transition); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .action-btn:hover { background: var(--accent-color); color: white; border-color: var(--accent-color); }
+
+        /* Animations */
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* Print Mode */
+        @media print {
+            body { background: white; color: black; }
+            .sidebar, .page-header, .answer-actions, #progress-bar, .no-print, #no-print { display: none !important; }
+            .main-content { padding: 0; margin: 0; max-width: 100%; }
+            .notebook-page { box-shadow: none; margin-bottom: 2rem; page-break-inside: avoid; border: 1px solid #ccc; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="progress-bar"></div>
+
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="no-print">
+            <div class="sidebar-header">
+                <h1>📚 TopScore Pro</h1>
+                <p>Vidyasagar Univ. Notes</p>
+            </div>
+            
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Search questions, keywords..." onkeyup="searchContent()">
+            </div>
+
+            <nav class="nav-links">
+                <a href="#home" class="active">🏠 Home</a>
+                <a href="#set1">📝 Practice Set 1</a>
+                <a href="#set2">📝 Practice Set 2</a>
+                <a href="#set3">📝 Practice Set 3</a>
+                <!-- Future Sets will be appended here -->
+            </nav>
+
+            <div class="student-features">
+                <button class="feature-btn" onclick="toggleTheme()">🌗 Toggle Dark Mode</button>
+                <button class="feature-btn" onclick="window.print()">🖨️ Print Notes (A4)</button>
+                <button class="feature-btn" onclick="increaseFontSize()">A+ Increase Font</button>
+                <button class="feature-btn" onclick="decreaseFontSize()">A- Decrease Font</button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div class="page-header" id="home">
+                <h2>Computer Network (MJ 7-T)</h2>
+                <p style="color: var(--text-secondary); font-size: 1.2rem;">The Master Revision Guide (Simple & Detailed)</p>
+            </div>
+
+            <div class="glass-card fade-in intro-card">
+                <h3 style="margin-bottom: 1rem; color: var(--accent-color);">🎯 Welcome, Topper.</h3>
+                <p style="line-height: 1.6;">Every single answer here is designed using a <b>3-step formula</b>: First, we explain it so simply that a 5-year-old can understand it. Second, we give you the exact real-world analogy. Third, we provide the structured, examiner-friendly points you need to copy into your answer sheet to score full marks.</p>
+            </div>
+
+            <!-- EXAM STRATEGY DASHBOARD -->
+            <div class="glass-card fade-in" id="strategy-dashboard" style="margin-bottom: 2rem; border-left: 5px solid #e74c3c;">
+                <h3 style="margin-bottom: 1rem; color: #e74c3c;">📊 Master Exam Strategy (Based on 5-Year PYQ Analytics)</h3>
+                <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px;">
+                        <p><b>Unit Weightage:</b></p>
+                        <ul style="list-style: none; padding-left: 0;">
+                            <li>🔴 <b>Unit I: Physical Layer</b> - 268 Marks (High)</li>
+                            <li>🔴 <b>Unit II: Data Link Layer</b> - 124 Marks (High)</li>
+                            <li>🟡 <b>Unit III: Network & Transport</b> - 96 Marks (Medium)</li>
+                            <li>🟢 <b>Unit IV: Application Layer</b> - 22 Marks (Low)</li>
+                        </ul>
+                    </div>
+                    <div style="flex: 1; min-width: 250px;">
+                        <p><b>The 80/20 Rule Hit List:</b></p>
+                        <ol style="margin-top: 0; line-height: 1.5;">
+                            <li>Data Transmission, Signals & Line Coding</li>
+                            <li>Data Link Control & ARQ Protocols</li>
+                            <li>Transmission Media & Network Topologies</li>
+                            <li>OSI vs. TCP/IP Network Architecture</li>
+                            <li>IP Addressing & Subnetting Mechanics</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 1.5rem; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;" class="no-print">
+                    <button class="action-btn" onclick="filterQuestions('all')" style="background: var(--bg-color); color: var(--text-color); border: 2px solid var(--accent-color);">👀 View All Notes</button>
+                    <button class="action-btn" onclick="filterQuestions('high')" style="background: #e74c3c; color: white; border: none; font-weight: bold;">🔥 Show Only High-Yield (80/20) Questions</button>
+                </div>
+            </div>
+
+            <div id="set1-container" class="set-container">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin: 3rem 0 1.5rem 0;">
+                    <h2 id="set1" style="margin: 0; font-family: var(--font-ui);">📄 Practice Set - 1</h2>
+                    <button class="action-btn no-print" onclick="printSet('set1-container')" style="background: var(--accent-color); color: white; border: none; padding: 8px 16px;">📥 Save Set 1 as PDF</button>
+                </div>
+
+            <!-- SET 1 Q1 -->
+            <div class="notebook-page fade-in question-container" data-marks="2" data-tags="ip, mac, logical, physical, addressing">
+                <div class="question-header">
+                    <span class="question-title">Q1. Logical vs Physical Addressing</span>
+                    <span class="marks-badge">2 Marks</span>
+                </div>
+                <div class="answer-content">
+                    <div class="explain-simple">
+                        Think of an <b>IP Address (Logical)</b> as your home's mailing address (it changes if you move to a new city). Think of a <b>MAC Address (Physical)</b> as your fingerprint (it is permanently attached to you and never changes, no matter where you go).
+                    </div>
+                    
+                    <p><b>1. Definition:</b><br>
+                    <b>Logical Addressing (IP):</b> A software-assigned address used to identify a device globally across different networks.<br>
+                    <b>Physical Addressing (MAC):</b> A hardware-burned address used to identify a device locally within the same network.</p>
+                    
+                    <p><b>2. Key Differences for the Exam:</b></p>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Logical Address (IP)</th>
+                            <th>Physical Address (MAC)</th>
+                        </tr>
+                        <tr>
+                            <td><b>Operates At</b></td>
+                            <td>Network Layer (Layer 3)</td>
+                            <td>Data Link Layer (Layer 2)</td>
+                        </tr>
+                        <tr>
+                            <td><b>Nature</b></td>
+                            <td><b>Dynamic</b> (Changes if you connect to a different Wi-Fi).</td>
+                            <td><b>Static</b> (Permanently burned into the NIC hardware).</td>
+                        </tr>
+                        <tr>
+                            <td><b>Routing Goal</b></td>
+                            <td>End-to-End delivery (Source to Final Destination).</td>
+                            <td>Hop-by-Hop delivery (Router to Router).</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="answer-actions">
+                    <button class="action-btn" onclick="copyAnswer(this)">📋 Copy</button>
+                </div>
+            </div>
+
+            <!-- SET 1 Q2 -->
+            <div class="notebook-page fade-in question-container" data-marks="2" data-tags="attenuation, distortion, transmission impairment">
+                <div class="question-header">
+                    <span class="question-title">Q2. Define Attenuation and Distortion.</span>
+                    <span class="marks-badge">2 Marks</span>
+                </div>
+                <div class="answer-content">
+                    <div class="explain-simple">
+                        <b>Attenuation</b> is when your voice gets quiet and fades away because someone is standing very far from you. <b>Distortion</b> is when you talk underwater and your voice sounds completely weird and changed.
+                    </div>
+                    
+                    <p><b>1. Introduction:</b> Both are types of <b>Transmission Impairments</b>, which means they destroy or degrade the quality of a signal as it travels through a wire.</p>
+
+                    <p><b>2. Attenuation:</b><br>
+                    It is the <b>loss of signal energy (strength)</b> over a distance due to the resistance of the cable. The signal becomes weaker the further it goes.<br>
+                    - <b>Solution:</b> We use <b>Amplifiers</b> to boost the signal strength back up.</p>
+                    
+                    <p><b>3. Distortion:</b><br>
+                    It means the <b>alteration of the signal's original shape</b>. When a signal contains different frequencies, they travel at slightly different speeds. They arrive at the destination at different times, causing the original shape to deform.<br>
+                    - <b>Solution:</b> We use <b>Equalizers</b> to fix the delay.</p>
+                </div>
+                <div class="answer-actions">
+                    <button class="action-btn" onclick="copyAnswer(this)">📋 Copy</button>
+                </div>
+            </div>
+
+            <!-- SET 1 Q3 -->
+            <div class="notebook-page fade-in question-container" data-marks="2" data-tags="subnet mask, ip, networking">
+                <div class="question-header">
+                    <span class="question-title">Q3. What is a subnet mask?</span>
+                    <span class="marks-badge">2 Marks</span>
+                </div>
+                <div class="answer-content">
+                    <div class="explain-simple">
+                        An IP address has two hidden parts combined into one: a "Network Name" and a "Specific Computer Name". The <b>Subnet Mask</b> is a special filter that separates these two parts so the router knows exactly where to send data.
+                    </div>
+                    
+                    <p><b>1. Definition:</b> A <b>Subnet Mask</b> is a 32-bit number that masks an IP address and divides it into two distinct parts: the <b>Network ID</b> and the <b>Host ID</b>.</p>
+                    
+                    <p><b>2. How it works:</b><br>
+                    - The continuous <b>1s</b> in the subnet mask represent the Network portion.<br>
+                    - The continuous <b>0s</b> represent the Host portion.</p>
+                    
+                    <p><b>3. Exam Example:</b><br>
+                    Take IP: <code>192.168.1.50</code> with a default Subnet Mask of <b><code>255.255.255.0</code></b>.<br>
+                    - The first three parts (192.168.1) belong to the Network.<br>
+                    - The last part (50) is the specific Host machine.</p>
+                </div>
+                <div class="answer-actions">
+                    <button class="action-btn" onclick="copyAnswer(this)">📋 Copy</button>
+                </div>
+            </div>
+
+            <!-- SET 1 Q4 -->
+            <div class="notebook-page fade-in question-container" data-marks="2" data-tags="dns, domain name system">
+                <div class="question-header">
+                    <span class="question-title">Q4. What is DNS?</span>
+                    <span class="marks-badge">2 Marks</span>
+                </div>
+                <div class="answer-content">
+                    <div class="explain-simple">
+                        Humans are good at remembering names (like <i>google.com</i>), but computers only understand numbers (like <i>142.250.190.46</i>). <b>DNS is the internet's phonebook</b> that instantly translates the name you type into the number the computer needs.
+                    </div>
+                    
+                    <p><b>1. Definition:</b> <b>DNS (Domain Name System)</b> is a hierarchical and decentralized naming system for computers and services connected to the Internet.</p>
+                    
+                    <p><b>2. Main Function:</b><br>
+                    It performs <b>Forward Lookup</b> (converting human-readable domain names into machine-readable IP addresses) and <b>Reverse Lookup</b> (converting IP addresses back to domain names).</p>
+                    
+                    <p><b>3. Exam Keywords:</b> It operates on <b>Port 53</b> and primarily uses the fast <b>UDP</b> protocol.</p>
+                </div>
+                <div class="answer-actions">
+                    <button class="action-btn" onclick="copyAnswer(this)">📋 Copy</button>
+                </div>
+            </div>
+
+            <!-- SET 1 Q5 -->
+            <div class="notebook-page fade-in question-container" data-marks="2" data-tags="data link layer, dll, responsibilities">
+                <div class="question-header">
+                    <span class="question-title">Q5. Responsibilities of Data Link Layer</span>
+                    <span class="marks-badge">2 Marks</span>
+                </div>
+                <div class="answer-content">
+                    <div class="explain-simple">
+                        If the Network layer tells the package <i>where</i> its final destination is, the <b>Data Link Layer (Layer 2)</b> is the delivery truck driver that physically drives the package from your house to the very first post office down the street without dropping it.
+                    </div>
+                    
+                    <p><b>1. Definition:</b> The Data Link Layer (Layer 2 of the OSI Model) is responsible for the error-free, node-to-node delivery of data over a physical link.</p>
+                    
+                    <p><b>2. Key Responsibilities (Write these 5 points):</b></p>
+                    <ul>
+                        <li><b>Framing:</b> Divides the continuous stream of bits into manageable data units called <b>Frames</b>.</li>
+                        <li><b>Physical Addressing:</b> Adds a header containing the <b>MAC Address</b> of the sender and receiver.</li>
+                        <li><b>Error Control:</b> Detects damaged or lost frames (using a CRC trailer) and retransmits them.</li>
+                        <li><b>Flow Control:</b> Ensures a fast sender does not overwhelm a slow receiver.</li>
+                        <li><b>Access Control:</b> When multiple devices share one wire, the MAC sublayer decides who gets to transmit next.</li>
+                    </ul>
+                </div>
+                <div class="answer-actions">
+                    <button class="action-btn" onclick="copyAnswer(this)">📋 Copy</button>
+                </div>
+            </div>
+
+            <!-- SET 1 Q6 -->
+            <div class="notebook-page fade-in question-container" data-marks="2" data-tags="port address, transport layer">
+                <div class="question-header">
+                    <span class="question-title">Q6. What is a Port Address?</span>
+                    <span class="marks-badge">2 Marks</span>
+                </div>
+                <div class="answer-content">
+                    <div class="analogy-box">
+                        Imagine a computer is a large Apartment Building. The <b>IP Address</b> gets the mail delivered to the building's main gate. But how does the mailman know which specific apartment to give it to? The <b>Port Address</b> is the specific apartment number (like Apartment 80 for the Web Browser).
+                    </div>
+                    
+                    <p><b>1. Definition:</b> A <b>Port Address</b> is a 16-bit logical identifier (ranging from 0 to 65535) used to identify a specific software process or application running on a host computer.</p>
+                    
+                    <p><b>2. Main Explanation:</b> While IP addresses identify the machine itself, Port addresses (operating at the Transport Layer) ensure that data goes to the correct application (like WhatsApp instead of Google Chrome).</p>
+                    
+                    <p><b>3. Examples:</b><br>
+                    - Port <b>80</b> is reserved for HTTP (Web browsing).<br>
+                    - Port <b>21</b> is reserved for FTP (File transfer).</p>
+                </div>
+                <div class="answer-actions">
+                    <button class="action-btn" onclick="copyAnswer(this)">📋 Copy</button>
+                </div>
+            </div>
+
+            <!-- SET 1 Q7 -->
+            <div class="notebook-page fade-in question-container" data-marks="2" data-tags="simplex, data flow, transmission mode">
+                <div class="question-header">
+                    <span class="question-title">Q7. Simplex Mode of Data Flow</span>
+                    <span class="marks-badge">2 Marks</span>
+                </div>
+                <div class="answer-content">
+                    <div class="explain-simple">
+                        It is exactly like a <b>One-Way Street</b>. Traffic (data) is only allowed to drive in one single direction. You can't turn around.
+                    </div>
+                    
+                    <p><b>1. Definition:</b> In <b>Simplex Mode</b>, communication is strictly <b>unidirectional</b>. Out of the two connected devices, only one can transmit data, and the other can only receive.</p>
+                    
+                    <p><b>2. Key Feature:</b> It is highly efficient because the entire bandwidth (capacity) of the channel is dedicated to sending data in that one direction.</p>
+                    
+                    <p><b>3. Real-World Examples:</b><br>
+                    - <b>Keyboard to Monitor:</b> A keyboard only ever sends data (input). A monitor only ever receives data (output).<br>
+                    - <b>Television Broadcasting:</b> The TV station sends the video, and your TV antenna only receives it.</p>
+                </div>
+                <div class="answer-actions">
+                    <button class="action-btn" onclick="copyAnswer(this)">📋 Copy</button>
+                </div>
+            </div>
+
+            <!-- SET 1 Q8 -->
+            <div class="notebook-page fade-in question-container" data-marks="2" data-tags="bit rate, baud rate, modulation">
+                <div class="question-header">
+                    <span class="question-title">Q8. Bit Rate vs Baud Rate</span>
+                    <span class="marks-badge">2 Marks</span>
+                </div>
+                <div class="answer-content">
+                    <div class="analogy-box">
+                        Imagine a train track.<br>
+                        - <b>Baud Rate</b> is the number of <i>Train Cars</i> that pass by every second.<br>
+                        - <b>Bit Rate</b> is the total number of <i>Passengers (Bits)</i> sitting inside those train cars.<br>
+                        If one train car holds 4 passengers, then the passenger rate (Bit rate) is 4 times higher than the car rate (Baud rate).
+                    </div>
+                    
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Bit Rate</th>
+                            <th>Baud Rate</th>
+                        </tr>
+                        <tr>
+                            <td><b>Definition</b></td>
+                            <td>The total number of <b>bits (0s and 1s)</b> transmitted per second.</td>
+                            <td>The total number of <b>signal elements (pulses/symbols)</b> transmitted per second.</td>
+                        </tr>
+                        <tr>
+                            <td><b>Importance</b></td>
+                            <td>Measures the actual data speed that computers care about.</td>
+                            <td>Measures the signaling speed that cables/wires care about.</td>
+                        </tr>
+                        <tr>
+                            <td><b>Formula</b></td>
+                            <td>Bit Rate = Baud Rate × <b>n</b> (where n is bits per signal).</td>
+                            <td>Baud Rate = Bit Rate ÷ <b>n</b></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="answer-actions">
+                    <button class="action-btn" onclick="copyAnswer(this)">📋 Copy</button>
+                </div>
+            </div>
+
+            <!-- SET 1 Q9 -->
+            <div class="notebook-page fade-in question-container" data-marks="5" data-tags="aloha, slotted aloha, pure aloha, mac">
+                <div class="question-header">
+                    <span class="question-title">Q9. Compare Slotted ALOHA and Pure ALOHA. What is the advantage of Slotted over Pure ALOHA?</span>
+                    <span class="marks-badge">5 Marks</span>
+                </div>
+                <div class="answer-content">
+                    <div class="explain-simple">
+                        Imagine a room full of people who want to talk.<br>
+                        <b>Pure ALOHA</b>: People just shout whenever they feel like it (causing lots of overlapping voices and chaos).<br>
+                        <b>Slotted ALOHA</b>: The teacher has a metronome. People are only allowed to start talking precisely when the metronome clicks (at the start of a "slot"). This drastically reduces chaotic overlapping!
+                    </div>
+
+                    <p><b>1. Comparison Table:</b></p>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Pure ALOHA</th>
+                            <th>Slotted ALOHA</th>
+                        </tr>
+                        <tr>
+                            <td><b>Time Rules</b></td>
+                            <td>Time is continuous. Transmit data <b>anytime</b> you want.</td>
+                            <td>Time is divided into discrete <b>Slots</b>. You can only transmit at the <b>beginning</b> of a slot.</td>
+                        </tr>
+                        <tr>
+                            <td><b>Vulnerable Time</b></td>
+                            <td>2 × Frame Transmission Time ($2 \times T_f$)</td>
+                            <td>1 × Frame Transmission Time ($1 \times T_f$)</td>
+                        </tr>
+                        <tr>
+                            <td><b>Max Efficiency</b></td>
+                            <td>Maximum efficiency is <b>18.4%</b>.</td>
+                            <td>Maximum efficiency is <b>36.8%</b>.</td>
+                        </tr>
+                    </table>
+
+                    <p><b>2. Advantage of Slotted over Pure ALOHA:</b><br>
+                    The biggest advantage is <b>double efficiency</b> (36.8% vs 18.4%) because it reduces the "Vulnerable Time" by half. Since stations are forced to wait for the beginning of the next slot, the chances of two frames colliding midway are drastically reduced.</p>
+                </div>
+            </div>
+
+            <!-- SET 1 Q10 -->
+            <div class="notebook-page fade-in question-container" data-marks="5" data-tags="csma, csma/cd, collision detection, wireless">
+                <div class="question-header">
+                    <span class="question-title">Q10. Explain CSMA/CD mechanism. Is it suitable for wireless networks? Justify.</span>
+                    <span class="marks-badge">5 Marks</span>
+                </div>
+                <div class="answer-content">
+                    <div class="explain-simple">
+                        <b>CSMA/CD</b> stands for "Listen Before You Talk, and Stop if Someone Else Talks at the Same Time."
+                    </div>
+
+                    <div class="diagram-container">
+                        <svg width="400" height="200" viewBox="0 0 400 200">
+                            <!-- Cable -->
+                            <line x1="50" y1="100" x2="350" y2="100" class="svg-hand svg-sketch" stroke-width="4"/>
+                            
+                            <!-- Computer A -->
+                            <rect x="70" y="30" width="50" height="40" class="svg-hand" rx="5" />
+                            <text x="95" y="55" class="svg-text" text-anchor="middle">A</text>
+                            <line x1="95" y1="70" x2="95" y2="100" class="svg-hand" />
+                            
+                            <!-- Computer B -->
+                            <rect x="270" y="30" width="50" height="40" class="svg-hand" rx="5" />
+                            <text x="295" y="55" class="svg-text" text-anchor="middle">B</text>
+                            <line x1="295" y1="70" x2="295" y2="100" class="svg-hand" />
+                            
+                            <!-- Collision symbol -->
+                            <path d="M180,80 L200,100 L180,120 M210,80 L190,100 L210,120" class="svg-hand" stroke="red"/>
+                            <text x="195" y="70" class="svg-text" fill="red" text-anchor="middle">BAM! (Collision)</text>
+                            
+                            <!-- Listening Waves -->
+                            <path d="M 125,90 Q 135,80 145,90 M 125,80 Q 140,65 155,80" class="svg-hand" stroke="#ff9800" stroke-width="2"/>
+                        </svg>
+                        <div class="diagram-caption">Fig: Hand-drawn visualization of CSMA/CD "Listening" & Colliding</div>
+                    </div>
+
+                    <p><b>1. The CSMA/CD Mechanism (Step-by-Step):</b><br>
+                    - <b>Carrier Sense (Listen):</b> Before sending data, a computer listens to the wire to see if it is busy. If busy, it waits.<br>
+                    - <b>Multiple Access (Talk):</b> If the wire is idle, the computer starts transmitting its data.<br>
+                    - <b>Collision Detection (Crash & Stop):</b> While transmitting, the computer keeps listening. If it detects a voltage spike (which means its data crashed into someone else's data), it immediately stops sending.<br>
+                    - <b>Backoff:</b> It sends a "Jam signal" to warn others, waits for a random amount of time, and tries again.</p>
+
+                    <p><b>2. Is it suitable for Wireless Networks?</b><br>
+                    <b>No!</b> CSMA/CD is designed for wired Ethernet cables. It fails in wireless networks for two reasons:<br>
+                    - <b>The Hidden Terminal Problem:</b> Laptop A and Laptop B might not be able to hear each other, but they can both reach the same Router. If they both transmit, a collision happens at the router, but A and B will never detect it.<br>
+                    - <b>Hardware Limitation:</b> A wireless radio cannot easily transmit a signal and listen for a collision on the exact same frequency at the exact same time without burning out.</p>
+                </div>
+            </div>
+
+            <!-- SET 1 Q11 -->
+            <div class="notebook-page fade-in question-container" data-marks="5" data-tags="osi, tcp/ip, model, reference">
+                <div class="question-header">
+                    <span class="question-title">Q11. Compare OSI Reference Model with TCP/IP model.</span>
+                    <span class="marks-badge">5 Marks</span>
+                </div>
+                <div class="answer-content">
+                    <div class="explain-simple">
+                        <b>OSI Model</b> is the perfect, theoretical blueprint of how networks *should* work (7 separate floors).<br>
+                        <b>TCP/IP Model</b> is the practical, real-world house we actually built and use today (4 combined floors).
+                    </div>
+
+                    <div class="diagram-container">
+                        <svg width="450" height="280" viewBox="0 0 450 280">
+                            <!-- OSI Stack -->
+                            <text x="100" y="25" class="svg-text" text-anchor="middle" font-size="18">OSI Model (7)</text>
+                            
+                            <rect x="20" y="40" width="160" height="30" class="svg-hand svg-sketch" fill="#e8f4f8"/>
+                            <text x="100" y="60" class="svg-text" text-anchor="middle">7. Application</text>
+                            
+                            <rect x="20" y="70" width="160" height="30" class="svg-hand svg-sketch" fill="#e8f4f8"/>
+                            <text x="100" y="90" class="svg-text" text-anchor="middle">6. Presentation</text>
+                            
+                            <rect x="20" y="100" width="160" height="30" class="svg-hand svg-sketch" fill="#e8f4f8"/>
+                            <text x="100" y="120" class="svg-text" text-anchor="middle">5. Session</text>
+                            
+                            <rect x="20" y="130" width="160" height="30" class="svg-hand svg-sketch"/>
+                            <text x="100" y="150" class="svg-text" text-anchor="middle">4. Transport</text>
+                            
+                            <rect x="20" y="160" width="160" height="30" class="svg-hand svg-sketch"/>
+                            <text x="100" y="180" class="svg-text" text-anchor="middle">3. Network</text>
+                            
+                            <rect x="20" y="190" width="160" height="30" class="svg-hand svg-sketch" fill="#fff3e0"/>
+                            <text x="100" y="210" class="svg-text" text-anchor="middle">2. Data Link</text>
+                            
+                            <rect x="20" y="220" width="160" height="30" class="svg-hand svg-sketch" fill="#fff3e0"/>
+                            <text x="100" y="240" class="svg-text" text-anchor="middle">1. Physical</text>
+
+                            <!-- Arrows showing combining -->
+                            <path d="M190,85 C 220,85 240,85 260,85" class="svg-hand" stroke-dasharray="4,4" marker-end="url(#arrow)"/>
+                            <path d="M190,205 C 220,205 240,235 260,235" class="svg-hand" stroke-dasharray="4,4"/>
+
+                            <!-- TCP/IP Stack -->
+                            <text x="340" y="25" class="svg-text" text-anchor="middle" font-size="18">TCP/IP (4)</text>
+                            
+                            <!-- Application spans top 3 -->
+                            <rect x="270" y="40" width="140" height="90" class="svg-hand svg-sketch" fill="#e8f4f8"/>
+                            <text x="340" y="90" class="svg-text" text-anchor="middle">Application</text>
+                            
+                            <rect x="270" y="130" width="140" height="30" class="svg-hand svg-sketch"/>
+                            <text x="340" y="150" class="svg-text" text-anchor="middle">Transport (TCP/UDP)</text>
+                            
+                            <rect x="270" y="160" width="140" height="30" class="svg-hand svg-sketch"/>
+                            <text x="340" y="180" class="svg-text" text-anchor="middle">Internet (IP)</text>
+                            
+                            <!-- Network Access spans bottom 2 -->
+                            <rect x="270" y="190" width="140" height="60" class="svg-hand svg-sketch" fill="#fff3e0"/>
+                            <text x="340" y="225" class="svg-text" text-anchor="middle">Network Access</text>
+                        </svg>
+                        <div class="diagram-caption">Fig: How 7 theoretical layers map to 4 practical layers.</div>
+                    </div>
+
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>OSI Reference Model</th>
+                            <th>TCP/IP Model</th>
+                        </tr>
+                        <tr>
+                            <td><b>Creator</b></td>
+                            <td>Developed by <b>ISO</b> (International Standards Organization).</td>
+                            <td>Developed by <b>ARPANET</b> (US Department of Defense).</td>
+                        </tr>
+                        <tr>
+                            <td><b>Nature</b></td>
+                            <td>Theoretical framework (Model came first, protocols later).</td>
+                            <td>Practical implementation (Protocols existed first, model built around them).</td>
+                        </tr>
+                        <tr>
+                            <td><b>Number of Layers</b></td>
+                            <td>7 strict layers.</td>
+                            <td>4 (or 5) combined layers.</td>
+                        </tr>
+                        <tr>
+                            <td><b>Session/Presentation</b></td>
+                            <td>Has separate Session and Presentation layers.</td>
+                            <td>No separate layers. Application layer handles all three jobs.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SET 1 Q12 -->
+            <div class="notebook-page fade-in question-container" data-marks="5" data-tags="multiplexing, fdm, tdm, wdm, analog, digital">
+                <div class="question-header">
+                    <span class="question-title">Q12. What is Multiplexing? Explain the different types of Multiplexing.</span>
+                    <span class="marks-badge">5 Marks</span>
+                </div>
+                <div class="answer-content">
+                    <div class="analogy-box">
+                        Imagine 4 small villages separated by a river from a big city. Instead of building 4 expensive, separate bridges for each village, we build <b>one giant super-bridge</b>. We put a traffic guard at the start (Multiplexer) to merge the cars, and a guard at the end (Demultiplexer) to separate them. This is Multiplexing!
+                    </div>
+
+                    <p><b>1. Definition:</b><br>
+                    <b>Multiplexing (MUX)</b> is a technique that combines multiple low-bandwidth signals into a single, high-bandwidth signal so they can share a single physical transmission link. It saves the cost of running multiple separate cables.</p>
+
+                    <p><b>2. Types of Multiplexing:</b></p>
+                    
+                    <p class="heading-sub">A. FDM (Frequency Division Multiplexing)</p>
+                    <ul>
+                        <li><b>How it works:</b> The total frequency (bandwidth) of the cable is sliced into smaller frequency bands. Each user gets their own dedicated frequency band to use at the same time.</li>
+                        <li><b>Analog/Digital:</b> Used for <b>Analog</b> signals.</li>
+                        <li><b>Example:</b> Cable TV or FM Radio. (104.8 FM and 98.3 FM exist in the same air, but on different frequency slices).</li>
+                        <li><b>Important:</b> Requires <b>Guard Bands</b> (empty spaces) between frequencies to stop interference.</li>
+                    </ul>
+
+                    <p class="heading-sub">B. TDM (Time Division Multiplexing)</p>
+                    <ul>
+                        <li><b>How it works:</b> Instead of slicing the frequency, we slice <b>Time</b>. The entire bandwidth of the cable is given to one user for a fraction of a second, then to the next user, round-robin style.</li>
+                        <li><b>Analog/Digital:</b> Used for <b>Digital</b> signals.</li>
+                        <li><b>Sub-types:</b> Synchronous TDM (fixed time slots) and Statistical/Asynchronous TDM (dynamic time slots based on who has data).</li>
+                    </ul>
+
+                    <p class="heading-sub">C. WDM (Wavelength Division Multiplexing)</p>
+                    <ul>
+                        <li><b>How it works:</b> Extremely similar to FDM, but specifically used for <b>Light waves in Optical Fiber cables</b>. Multiple beams of light of different colors (wavelengths) are combined using a prism.</li>
+                        <li><b>Analog/Digital:</b> Used for <b>Analog (Optical)</b> signals.</li>
+                        <li><b>Example:</b> Undersea internet cables.</li>
+                    </ul>
+
+                    <div class="diagram-container">
+                        <svg width="450" height="220" viewBox="0 0 450 220">
+                            <!-- FDM vs TDM hand drawn concept -->
+                            <text x="120" y="20" class="svg-text" text-anchor="middle">FDM (Slices Frequency)</text>
+                            
+                            <!-- Pipe -->
+                            <rect x="20" y="40" width="200" height="150" fill="none" class="svg-hand" stroke="#ccc"/>
+                            
+                            <!-- Frequency slices (Horizontal bands) -->
+                            <rect x="20" y="40" width="200" height="40" fill="rgba(255,0,0,0.1)" stroke="red" class="svg-hand"/>
+                            <text x="120" y="65" font-family="var(--font-hand)" font-size="14" fill="red" text-anchor="middle">User 1 (Always on)</text>
+                            
+                            <rect x="20" y="95" width="200" height="40" fill="rgba(0,128,0,0.1)" stroke="green" class="svg-hand"/>
+                            <text x="120" y="120" font-family="var(--font-hand)" font-size="14" fill="green" text-anchor="middle">User 2 (Always on)</text>
+                            
+                            <rect x="20" y="150" width="200" height="40" fill="rgba(0,0,255,0.1)" stroke="blue" class="svg-hand"/>
+                            <text x="120" y="175" font-family="var(--font-hand)" font-size="14" fill="blue" text-anchor="middle">User 3 (Always on)</text>
+                            
+                            <!-- TDM -->
+                            <text x="350" y="20" class="svg-text" text-anchor="middle">TDM (Slices Time)</text>
+                            <rect x="270" y="40" width="150" height="150" fill="none" class="svg-hand" stroke="#ccc"/>
+                            
+                            <!-- Time slices (Vertical chunks moving) -->
+                            <rect x="275" y="40" width="30" height="150" fill="rgba(255,0,0,0.2)" stroke="red" class="svg-hand"/>
+                            <text x="290" y="120" font-family="var(--font-hand)" font-size="12" fill="red" text-anchor="middle" transform="rotate(-90 290,120)">U1 Time</text>
+                            
+                            <rect x="315" y="40" width="30" height="150" fill="rgba(0,128,0,0.2)" stroke="green" class="svg-hand"/>
+                            <text x="330" y="120" font-family="var(--font-hand)" font-size="12" fill="green" text-anchor="middle" transform="rotate(-90 330,120)">U2 Time</text>
+                            
+                            <rect x="355" y="40" width="30" height="150" fill="rgba(0,0,255,0.2)" stroke="blue" class="svg-hand"/>
+                            <text x="370" y="120" font-family="var(--font-hand)" font-size="12" fill="blue" text-anchor="middle" transform="rotate(-90 370,120)">U3 Time</text>
+                            
+                            <!-- Direction -->
+                            <path d="M 120,200 L 120,215 L 140,215" class="svg-hand" fill="none" marker-end="url(#arrow)"/>
+                            <text x="160" y="220" font-family="var(--font-hand)" font-size="12">Flow over time</text>
+                        </svg>
+                        <div class="diagram-caption">Fig: FDM divides the pipe horizontally (frequency). TDM divides it vertically (time slots).</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SET 1 Q13 -->
+            <div class="notebook-page fade-in question-container" data-marks="5" data-tags="stop and wait, arq, go back n, sliding window">
+                <div class="question-header">
+                    <span class="question-title">Q13. Differentiate between Stop & Wait ARQ and Go-Back-N ARQ.</span>
+                    <span class="marks-badge">5 Marks</span>
+                </div>
+                <div class="answer-content">
+                    <div class="explain-simple">
+                        Imagine a teacher giving notes to a student.<br>
+                        <b>Stop & Wait:</b> Teacher reads one sentence, stops, and waits for the student to say "Got it" before reading the next sentence.<br>
+                        <b>Go-Back-N:</b> Teacher reads 5 sentences fast (a window). The student says "I missed sentence #3". The teacher has to go back and re-read sentence 3, 4, and 5.
+                    </div>
+
+                    <p>Both are Automatic Repeat reQuest (ARQ) protocols used in the Data Link Layer for error control.</p>
+
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Stop & Wait ARQ</th>
+                            <th>Go-Back-N ARQ (Sliding Window)</th>
+                        </tr>
+                        <tr>
+                            <td><b>Sender Window Size</b></td>
+                            <td>Exactly <b>1</b>. (Sends one frame at a time).</td>
+                            <td>Size is <b>N</b> (e.g., $2^m - 1$). Sends multiple frames at once.</td>
+                        </tr>
+                        <tr>
+                            <td><b>Receiver Window Size</b></td>
+                            <td>Exactly <b>1</b>.</td>
+                            <td>Exactly <b>1</b> (only accepts in-order frames).</td>
+                        </tr>
+                        <tr>
+                            <td><b>Bandwidth Utilization</b></td>
+                            <td>Very Low (Wastes a lot of time waiting for ACKs).</td>
+                            <td>High (Keeps the pipe full of data while waiting for ACKs).</td>
+                        </tr>
+                        <tr>
+                            <td><b>Failure Recovery</b></td>
+                            <td>If Frame 1 is lost, it just resends Frame 1.</td>
+                            <td>If Frame 2 is lost, it discards Frame 3, 4, 5 and the sender must <b>Go Back</b> and re-send 2, 3, 4, 5.</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SET 1 Q14 -->
+            <div class="notebook-page fade-in question-container" data-marks="10" data-tags="osi model, tcp/ip, session layer, presentation layer">
+                <div class="question-header">
+                    <span class="question-title">Q14. Briefly discuss the ISO/OSI Reference Model. Why are presentation and session layers removed from TCP/IP?</span>
+                    <span class="marks-badge">10 Marks</span>
+                </div>
+                <div class="answer-content">
+                    <div class="explain-simple">
+                        The <b>OSI Model</b> is the 7-step instruction manual for how two computers talk to each other over the internet. From plugging in the cable (Layer 1) to clicking a button in your browser (Layer 7).
+                    </div>
+
+                    <p><b>1. The 7 Layers of OSI (Bottom to Top):</b></p>
+                    <ul>
+                        <li><b>1. Physical Layer:</b> Converts data into electrical signals or light pulses (0s and 1s) and sends them over cables. (Hubs, Cables).</li>
+                        <li><b>2. Data Link Layer:</b> Packages 0s and 1s into Frames. Handles MAC addressing and error checking on the local wire. (Switches).</li>
+                        <li><b>3. Network Layer:</b> Adds IP addresses and finds the best route/path across the global internet. (Routers).</li>
+                        <li><b>4. Transport Layer:</b> Ensures complete end-to-end delivery using Port numbers. (TCP/UDP). Cuts data into Segments.</li>
+                        <li><b>5. Session Layer:</b> Opens, manages, and closes the communication session (dialogue) between two devices.</li>
+                        <li><b>6. Presentation Layer:</b> Formats, encrypts, and compresses the data. (Translates it into JPEG, MP3, etc.).</li>
+                        <li><b>7. Application Layer:</b> The software you actually use to access the network (like Google Chrome, WhatsApp). Protocols: HTTP, FTP.</li>
+                    </ul>
+
+                    <p><b>2. Why were Presentation and Session layers removed in TCP/IP?</b></p>
+                    <div class="analogy-box">
+                        Think of an office worker.<br>
+                        In OSI, one person opens the envelope (Session), another translates it (Presentation), and a boss reads it (Application).<br>
+                        In TCP/IP, the boss realizes this is too slow and says: <i>"I'll just do all three jobs myself!"</i>
+                    </div>
+                    
+                    <p>TCP/IP is a pragmatic, real-world model. The designers of TCP/IP merged Layers 5, 6, and 7 into a single <b>Application Layer</b> because:<br>
+                    - <b>Efficiency:</b> Separating encryption (Layer 6) from the application (Layer 7) was unnecessary. Applications like Web Browsers (using HTTPS) can easily handle their own encryption and session management.<br>
+                    - <b>Flexibility:</b> Not every application needs a session or presentation formatting. Forcing them into separate strict layers created unnecessary overhead.</p>
+                </div>
+            </div>
+
+            <!-- SET 1 Q15 -->
+            <div class="notebook-page fade-in question-container" data-marks="10" data-tags="hamming code, parity matrix, error correction">
+                <div class="question-header">
+                    <span class="question-title">Q15. Write about Hamming Code. Using a parity matrix, find the original data from received data: $D = 1010101$. (Even parity)</span>
+                    <span class="marks-badge">10 Marks</span>
+                </div>
+                <div class="answer-content">
+                    <div class="explain-simple">
+                        <b>Hamming Code</b> is a clever math trick. Before sending your data, you hide extra "checker bits" (parity bits) inside it. If the receiver gets a corrupted message, these checker bits act like detectives to find exactly which bit flipped, and automatically flip it back!
+                    </div>
+
+                    <p><b>1. Introduction to Hamming Code:</b><br>
+                    It is an Error Detection and Correction technique developed by R.W. Hamming. It uses redundant parity bits inserted at positions that are powers of 2 (1, 2, 4, 8...).</p>
+
+                    <p><b>2. Solving the Problem (Step-by-Step):</b><br>
+                    <b>Given:</b> Received Code Word ($D$) = <code>1 0 1 0 1 0 1</code> (7 bits total).<br>
+                    Since total length is 7 ($m+r = 7$), we know it's a (7,4) Hamming Code. There are 4 Data bits and 3 Parity bits ($r=3$ because $2^3 \ge 4+3+1$).</p>
+
+                    <p><b>Step A: Identify Bit Positions (Right to Left, 1 to 7):</b></p>
+                    <table class="comparison-table" style="text-align: center;">
+                        <tr>
+                            <th>Pos 7 (D4)</th>
+                            <th>Pos 6 (D3)</th>
+                            <th>Pos 5 (D2)</th>
+                            <th>Pos 4 (P3)</th>
+                            <th>Pos 3 (D1)</th>
+                            <th>Pos 2 (P2)</th>
+                            <th>Pos 1 (P1)</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td><b>0</b></td>
+                            <td>1</td>
+                            <td><b>0</b></td>
+                            <td><b>1</b></td>
+                        </tr>
+                    </table>
+                    <p><i>(Note: Parity bits P1, P2, P3 sit at positions $2^0=1$, $2^1=2$, and $2^2=4$).</i></p>
+
+                    <p><b>Step B: Check the Parities (Even Parity means total 1s should be even):</b><br>
+                    - <b>Check P1 (Checks positions 1, 3, 5, 7):</b> Bits are (1, 1, 1, 1). Total 1s = 4 (Even).<br>
+                      $\implies$ $E_1 = 0$ (No Error).<br>
+                    - <b>Check P2 (Checks positions 2, 3, 6, 7):</b> Bits are (0, 1, 0, 1). Total 1s = 2 (Even).<br>
+                      $\implies$ $E_2 = 0$ (No Error).<br>
+                    - <b>Check P3 (Checks positions 4, 5, 6, 7):</b> Bits are (0, 1, 0, 1). Total 1s = 2 (Even).<br>
+                      $\implies$ $E_3 = 0$ (No Error).</p>
+
+                    <p><b>Step C: Conclusion:</b><br>
+                    The error position is $E_3 E_2 E_1 = 000 = 0$. Since it is 0, <b>there is no error in the received data!</b></p>
+
+                    <p><b>Final Answer (Extracting Original Data):</b><br>
+                    Remove the parity bits (at positions 1, 2, 4). The remaining bits are the original Data bits (D4, D3, D2, D1).<br>
+                    Original Data = <b>1011</b>.</p>
+                </div>
+            </div>
+
+            <!-- SET 1 Q16 -->
+            <div class="notebook-page fade-in question-container" data-marks="10" data-tags="classful, classless, addressing, ipv4, subnetting">
+                <div class="question-header">
+                    <span class="question-title">Q16. Difference between Classful and Classless addressing.</span>
+                    <span class="marks-badge">10 Marks</span>
+                </div>
+                <div class="answer-content">
+                    <div class="explain-simple">
+                        <b>Classful Addressing</b> is like buying T-shirts only in Small, Medium, or Large. If you need 500 IP addresses, you are forced to buy a "Medium" block (which gives 65,000 addresses), wasting thousands of them.<br>
+                        <b>Classless Addressing (CIDR)</b> is like going to a tailor. You ask for exactly 500 IPs, and you get exactly 500 IPs. No wastage!
+                    </div>
+
+                    <p><b>1. Introduction:</b> Both are architectures for allocating IPv4 addresses. Classful is the old, rigid system (Classes A, B, C, D, E). Classless (CIDR) is the modern, flexible system used today to save IP addresses from being exhausted.</p>
+
+                    <p><b>2. Detailed Comparison:</b></p>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Classful Addressing</th>
+                            <th>Classless Addressing (CIDR)</th>
+                        </tr>
+                        <tr>
+                            <td><b>Architecture</b></td>
+                            <td>IP addresses are strictly divided into 5 rigid classes (A, B, C, D, E).</td>
+                            <td>No classes exist. IP addresses are treated as an arbitrary block of bits.</td>
+                        </tr>
+                        <tr>
+                            <td><b>Subnet Mask</b></td>
+                            <td>Uses <b>Default Subnet Masks</b> (e.g., 255.0.0.0 for Class A).</td>
+                            <td>Uses <b>Variable Length Subnet Masking (VLSM)</b> (e.g., /24, /27, /30).</td>
+                        </tr>
+                        <tr>
+                            <td><b>Wastage of IPs</b></td>
+                            <td><b>Huge wastage.</b> If an org needs 300 IPs, Class C (254) is too small, so they take Class B (65,534) and waste 65,234 IPs.</td>
+                            <td><b>Zero wastage.</b> Block sizes are tailored precisely to the organization's needs.</td>
+                        </tr>
+                        <tr>
+                            <td><b>Routing Table Size</b></td>
+                            <td>Routers maintain huge, complex routing tables, making them slow.</td>
+                            <td>Routers use "Route Aggregation" to shrink the routing table, making them much faster.</td>
+                        </tr>
+                        <tr>
+                            <td><b>Identification</b></td>
+                            <td>Determined by looking at the first few bits of the IP address (e.g., 0 for Class A, 10 for Class B).</td>
+                            <td>Determined strictly by the CIDR prefix slash notation (e.g., 192.168.1.0<b>/27</b>).</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            </div> <!-- End of Set 1 Container -->
+
+            <!-- SET 2 CONTAINER -->
+            <div id="set2-container" class="set-container">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin: 3rem 0 1.5rem 0;">
+                    <h2 id="set2" style="margin: 0; font-family: var(--font-ui);">📄 Practice Set - 2</h2>
+                    <button class="action-btn no-print" onclick="printSet('set2-container')" style="background: var(--accent-color); color: white; border: none; padding: 8px 16px;">📥 Save Set 2 as PDF</button>
+                </div>
+
+                <!-- SET 2 Q1 -->
+                <div class="notebook-page fade-in question-container" data-marks="2" data-tags="nrz, rz, encoding, return to zero">
+                    <div class="question-header">
+                        <span class="question-title">Q1. Difference between NRZ and RZ encoding.</span>
+                        <span class="marks-badge">2 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>NRZ (Non-Return to Zero):</b> The voltage stays high or low for the whole time. (Like holding your hand up for a full minute).<br>
+                            <b>RZ (Return to Zero):</b> The voltage goes high, but halfway through the time, it drops back to zero to "rest" before the next signal.
+                        </div>
+                        <p><b>Key Differences:</b></p>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>NRZ (Non-Return to Zero)</th>
+                                <th>RZ (Return to Zero)</th>
+                            </tr>
+                            <tr>
+                                <td><b>Voltage State</b></td>
+                                <td>Signal never returns to zero in the middle of a bit.</td>
+                                <td>Signal returns to zero precisely at the middle of every bit.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Synchronization</b></td>
+                                <td>Poor synchronization (hard to tell when a long string of 1s or 0s ends).</td>
+                                <td>Excellent self-synchronization because the drop to zero acts like a clock tick.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Bandwidth</b></td>
+                                <td>Uses less bandwidth.</td>
+                                <td>Uses more bandwidth (needs two signal changes per bit).</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 2 Q2 -->
+                <div class="notebook-page fade-in question-container" data-marks="2" data-tags="arp, address resolution protocol, mac, ip">
+                    <div class="question-header">
+                        <span class="question-title">Q2. Role of ARP.</span>
+                        <span class="marks-badge">2 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="analogy-box">
+                            Imagine you are in a classroom. You know your friend's name (IP Address), but you don't know what their face looks like (MAC Address). You shout to the whole class: "Who is John?" (Broadcast). John replies directly to you: "I am John, and this is my face!" (Unicast). This shouting process is ARP.
+                        </div>
+                        <p><b>1. Definition:</b> <b>ARP (Address Resolution Protocol)</b> is a Network Layer protocol.</p>
+                        <p><b>2. Role:</b> Its primary job is to find the physical <b>MAC Address</b> of a device when only its logical <b>IP Address</b> is known.</p>
+                        <p><b>3. How it works:</b> The sender broadcasts an ARP Request ("Who has IP 192.168.1.5?"). The target machine replies with an ARP Reply containing its MAC address ("I do, my MAC is 00:1A:2B...").</p>
+                    </div>
+                </div>
+
+                <!-- SET 2 Q3 -->
+                <div class="notebook-page fade-in question-container" data-marks="2" data-tags="bridge, router, networking devices, osi">
+                    <div class="question-header">
+                        <span class="question-title">Q3. Bridge vs Router.</span>
+                        <span class="marks-badge">2 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            A <b>Bridge</b> connects two local rooms together (like connecting the IT dept to the HR dept).<br>
+                            A <b>Router</b> connects your entire building to the outside internet.
+                        </div>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Bridge</th>
+                                <th>Router</th>
+                            </tr>
+                            <tr>
+                                <td><b>OSI Layer</b></td>
+                                <td>Operates at Layer 2 (Data Link Layer).</td>
+                                <td>Operates at Layer 3 (Network Layer).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Addressing</b></td>
+                                <td>Uses Physical Addresses (<b>MAC</b>).</td>
+                                <td>Uses Logical Addresses (<b>IP</b>).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Purpose</b></td>
+                                <td>Connects two similar LANs (Local Area Networks) together.</td>
+                                <td>Connects different networks (like LAN to WAN/Internet).</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 2 Q4 -->
+                <div class="notebook-page fade-in question-container" data-marks="2" data-tags="default mask, ip address, classful">
+                    <div class="question-header">
+                        <span class="question-title">Q4. Default mask value of IP address.</span>
+                        <span class="marks-badge">2 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            It's the standard filter that separates the "Network" portion of an IP from the "Host" (computer) portion based on its Class.
+                        </div>
+                        <p>In Classful addressing, the default subnet masks are:<br>
+                        - <b>Class A:</b> 255.0.0.0 (First octet is network, rest is host).<br>
+                        - <b>Class B:</b> 255.255.0.0 (First two octets are network).<br>
+                        - <b>Class C:</b> 255.255.255.0 (First three octets are network).</p>
+                    </div>
+                </div>
+
+                <!-- SET 2 Q5 -->
+                <div class="notebook-page fade-in question-container" data-marks="2" data-tags="tcp, udp, transmission control protocol">
+                    <div class="question-header">
+                        <span class="question-title">Q5. Difference between TCP and UDP.</span>
+                        <span class="marks-badge">2 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>TCP:</b> Like a phone call. You say "Hello?", the other person replies "Yes, I'm here", and then you talk. It guarantees the message arrives.<br>
+                            <b>UDP:</b> Like throwing a paper airplane. You throw it fast and hope it lands. If it crashes, you don't care. Used for live video where speed beats accuracy.
+                        </div>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>TCP (Transmission Control Protocol)</th>
+                                <th>UDP (User Datagram Protocol)</th>
+                            </tr>
+                            <tr>
+                                <td><b>Connection Type</b></td>
+                                <td>Connection-oriented (Establishes link before sending).</td>
+                                <td>Connectionless (Just starts sending data).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Reliability</b></td>
+                                <td><b>High.</b> Guarantees delivery. Lost packets are resent.</td>
+                                <td><b>Low.</b> No guarantee. Lost packets are ignored.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Speed</b></td>
+                                <td>Slower (due to error checking and ACKs).</td>
+                                <td>Very Fast (no overhead or ACKs).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Use Cases</b></td>
+                                <td>Web browsing (HTTP), Emails (SMTP), File transfer (FTP).</td>
+                                <td>Live streaming, Voice calls (VoIP), Online Gaming.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 2 Q6 -->
+                <div class="notebook-page fade-in question-container" data-marks="2" data-tags="piggybacking, sliding window, data link layer">
+                    <div class="question-header">
+                        <span class="question-title">Q6. What is Piggybacking?</span>
+                        <span class="marks-badge">2 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            Instead of sending an empty "Thank You" envelope (ACK), you write "Thank You" on the back of the next data package you send. It saves time and money!
+                        </div>
+                        <p><b>1. Definition:</b> <b>Piggybacking</b> is a technique used in two-way communication (Data Link Layer) to improve efficiency.</p>
+                        <p><b>2. Mechanism:</b> Instead of sending a separate Acknowledgement (ACK) frame for received data, the receiver waits for a short time and attaches (piggybacks) the ACK onto the next outgoing Data frame it needs to send back to the sender.</p>
+                        <p><b>3. Benefit:</b> It reduces bandwidth wastage by decreasing the total number of frames travelling on the network.</p>
+                    </div>
+                </div>
+
+                <!-- SET 2 Q7 -->
+                <div class="notebook-page fade-in question-container" data-marks="2" data-tags="url, uri, uniform resource, internet">
+                    <div class="question-header">
+                        <span class="question-title">Q7. Differentiate between URL and URI.</span>
+                        <span class="marks-badge">2 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>URI (Identifier):</b> A person's name (e.g., "John Doe"). It tells you WHO it is, but not where they are.<br>
+                            <b>URL (Locator):</b> A person's home address (e.g., "123 Main St, NY"). It tells you exactly WHERE to find them. All URLs are URIs, but not all URIs are URLs!
+                        </div>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>URI (Uniform Resource Identifier)</th>
+                                <th>URL (Uniform Resource Locator)</th>
+                            </tr>
+                            <tr>
+                                <td><b>Meaning</b></td>
+                                <td>A broad term that simply <b>identifies</b> a resource by name or location.</td>
+                                <td>A specific type of URI that provides the exact <b>location</b> (how to reach it).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Components</b></td>
+                                <td>Can just be an ISBN number of a book (URN).</td>
+                                <td>Must include the protocol (e.g., <code>https://</code> or <code>ftp://</code>).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Example</b></td>
+                                <td><code>urn:isbn:0451450523</code></td>
+                                <td><code>https://www.google.com/index.html</code></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 2 Q8 -->
+                <div class="notebook-page fade-in question-container" data-marks="2" data-tags="flow control, error control, data link layer">
+                    <div class="question-header">
+                        <span class="question-title">Q8. Flow Control vs Error Control.</span>
+                        <span class="marks-badge">2 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>Flow Control:</b> A traffic cop telling fast cars to slow down so there isn't a traffic jam at the exit.<br>
+                            <b>Error Control:</b> A mechanic checking cars at the exit to see if any got damaged on the road, and fixing them if they did.
+                        </div>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Flow Control</th>
+                                <th>Error Control</th>
+                            </tr>
+                            <tr>
+                                <td><b>Primary Goal</b></td>
+                                <td>Prevents a fast sender from overwhelming a slow receiver with too much data.</td>
+                                <td>Ensures the data received is exactly identical to the data sent, without corruption.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Techniques Used</b></td>
+                                <td>Stop-and-Wait, Sliding Window protocol.</td>
+                                <td>Checksums, CRCs, ARQ (Automatic Repeat Request).</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 2 Q9 -->
+                <div class="notebook-page fade-in question-container" data-marks="5" data-tags="static routing, dynamic routing, router">
+                    <div class="question-header">
+                        <span class="question-title">Q9. Differentiate between Static and Dynamic routing.</span>
+                        <span class="marks-badge">5 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>Static Routing:</b> Like taking a printed map on a road trip. You must follow exactly the path written down, even if there's a traffic jam.<br>
+                            <b>Dynamic Routing:</b> Like using Google Maps. If a road closes ahead, it automatically calculates a new, faster route for you in real-time.
+                        </div>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Static Routing</th>
+                                <th>Dynamic Routing</th>
+                            </tr>
+                            <tr>
+                                <td><b>Definition</b></td>
+                                <td>Routes are manually configured by a network administrator.</td>
+                                <td>Routes are automatically learned and updated by the router using protocols.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Adaptability</b></td>
+                                <td>Cannot adapt to link failures. (Network goes down if cable breaks).</td>
+                                <td>Highly adaptable. Finds an alternative path automatically if a link fails.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Overhead / CPU usage</b></td>
+                                <td>Low (No complex algorithms running).</td>
+                                <td>High (Constantly uses CPU and bandwidth to talk to other routers).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Best Used For</b></td>
+                                <td>Small, simple networks where topology rarely changes.</td>
+                                <td>Large, complex networks like the Internet.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 2 Q10 -->
+                <div class="notebook-page fade-in question-container" data-marks="5" data-tags="crc, cyclic redundancy check, polynomial">
+                    <div class="question-header">
+                        <span class="question-title">Q10. Explain CRC with generator polynomial $x^4+x+1$ and Data $1010101010$.</span>
+                        <span class="marks-badge">5 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>CRC (Cyclic Redundancy Check)</b> is a math trick using binary division. The sender divides the data by a secret number (Generator). The remainder (CRC) is attached to the data. If the receiver does the same division and gets a remainder of 0, the data is safe!
+                        </div>
+                        <p><b>Step 1: Find the Divisor (Generator)</b><br>
+                        Polynomial: $x^4 + x^1 + x^0$<br>
+                        Convert to binary (coefficients of $x^4, x^3, x^2, x^1, x^0$): <b>10011</b> (Length $k = 5$).</p>
+                        
+                        <p><b>Step 2: Append Zeros to Data</b><br>
+                        Append $k-1 = 4$ zeros to the Data.<br>
+                        Dividend = <b>10101010100000</b></p>
+                        
+                        <p><b>Step 3: Binary Division (XOR Operation)</b><br>
+                        We perform modulo-2 division (XOR: same bits = 0, different bits = 1).<br>
+                        <code>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10110... (Quotient)<br>
+                        10011 | 10101010100000<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10011<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-----<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;011001...
+                        </code><br>
+                        <i>(After performing full XOR division down to the last bit...)</i></p>
+                        
+                        <p><b>Step 4: The Result (CRC)</b><br>
+                        The final 4-bit remainder is the CRC. Let's say the remainder is <b>0110</b>.<br>
+                        <b>Transmitted Code Word:</b> Original Data + CRC = <b>10101010100110</b>.</p>
+                    </div>
+                </div>
+
+                <!-- SET 2 Q11 -->
+                <div class="notebook-page fade-in question-container" data-marks="5" data-tags="distance vector, link state, routing algorithm">
+                    <div class="question-header">
+                        <span class="question-title">Q11. Distance Vector Routing vs Link State Routing.</span>
+                        <span class="marks-badge">5 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>Distance Vector:</b> Like relying on gossip. A router only knows what its direct neighbors tell it. It has no map of the full internet.<br>
+                            <b>Link State:</b> Like giving everyone a full GPS map. Every router maps the entire network independently to find the shortest path.
+                        </div>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Distance Vector Routing (DVR)</th>
+                                <th>Link State Routing (LSR)</th>
+                            </tr>
+                            <tr>
+                                <td><b>Knowledge base</b></td>
+                                <td>Router knows <b>everything</b> about its <b>neighbors</b>.</td>
+                                <td>Router knows <b>something</b> about <b>everyone</b> (full topology).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Updates Sent To</b></td>
+                                <td>Only to directly connected neighbors.</td>
+                                <td>Broadcasts to the entire network (Flooding).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Algorithm Used</b></td>
+                                <td>Bellman-Ford Algorithm.</td>
+                                <td>Dijkstra's Shortest Path Algorithm.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Famous Problem</b></td>
+                                <td>Suffers from "Count to Infinity" problem (slow to realize a link is dead).</td>
+                                <td>No count-to-infinity problem. Updates are instantaneous.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 2 Q12 -->
+                <div class="notebook-page fade-in question-container" data-marks="5" data-tags="email, architecture, mta, mua, maa">
+                    <div class="question-header">
+                        <span class="question-title">Q12. Explain the Architecture of E-mail system.</span>
+                        <span class="marks-badge">5 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            Sending an email is like sending a physical letter. You write it (MUA), give it to your local post office (MTA), they fly it to the receiver's post office, and the receiver unlocks their mailbox to read it (MAA).
+                        </div>
+                        <p>The Email Architecture consists of three main components:</p>
+                        
+                        <p><b>1. MUA (Message User Agent)</b><br>
+                        This is the email software you use (like Microsoft Outlook or Gmail's website). It helps you compose, read, and manage emails.</p>
+                        
+                        <p><b>2. MTA (Message Transfer Agent)</b><br>
+                        This is the actual Post Office server. It uses <b>SMTP (Simple Mail Transfer Protocol)</b> to push the email from the sender's computer to the sender's server, and then across the internet to the receiver's server.</p>
+                        
+                        <p><b>3. MAA (Message Access Agent)</b><br>
+                        Once the email arrives at the receiver's server, it just sits there. The receiver uses an MAA protocol like <b>POP3</b> (downloads and deletes) or <b>IMAP</b> (syncs and keeps on server) to pull the email down to their phone or laptop to read it.</p>
+                    </div>
+                </div>
+
+                <!-- SET 2 Q13 -->
+                <div class="notebook-page fade-in question-container" data-marks="5" data-tags="multiplexing, fdm, tdm">
+                    <div class="question-header">
+                        <span class="question-title">Q13. Need for multiplexing and its types.</span>
+                        <span class="marks-badge">5 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="exam-note">
+                            <i>Note: This is highly similar to Q12 in Practice Set 1. Here is a quick summary focused on the "Need" for it.</i>
+                        </div>
+                        <p><b>1. The Need for Multiplexing:</b><br>
+                        If 10 computers want to talk to 10 other computers far away, laying 10 separate physical cables is incredibly expensive and inefficient. <br>
+                        <b>Multiplexing</b> solves this by allowing multiple devices to share one single high-capacity cable simultaneously. It dramatically reduces infrastructure costs and maximizes bandwidth utilization.</p>
+                        
+                        <p><b>2. Types of Multiplexing:</b><br>
+                        - <b>FDM (Frequency Division):</b> Slices the cable's bandwidth into different frequencies (like different radio stations in the air).<br>
+                        - <b>TDM (Time Division):</b> Gives the entire cable to one user for a fraction of a second, then switches to the next user (round-robin).<br>
+                        - <b>WDM (Wavelength Division):</b> Used in Fiber Optics. Sends different colors of light down the same glass tube.</p>
+                    </div>
+                </div>
+
+                <!-- SET 2 Q14 -->
+                <div class="notebook-page fade-in question-container" data-marks="5" data-tags="error detection, error correction, coding">
+                    <div class="question-header">
+                        <span class="question-title">Q14. Error detection vs Error correction.</span>
+                        <span class="marks-badge">5 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>Error Detection:</b> Realizing your milk has gone bad (you know it's broken, but you have to throw it away and ask for new milk).<br>
+                            <b>Error Correction:</b> Dropping a lego house, and instantly knowing exactly how to put the broken pieces back together without asking for a new one.
+                        </div>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Error Detection</th>
+                                <th>Error Correction</th>
+                            </tr>
+                            <tr>
+                                <td><b>Definition</b></td>
+                                <td>Only identifies if the received data is corrupted or not.</td>
+                                <td>Identifies the error AND pinpoints exactly which bit flipped to fix it.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Action Taken</b></td>
+                                <td>Discards the corrupted frame and requests the sender to retransmit.</td>
+                                <td>Automatically repairs the corrupted bits. No retransmission needed.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Redundant Bits</b></td>
+                                <td>Requires very few extra bits (e.g., 1 parity bit).</td>
+                                <td>Requires a large number of extra bits (e.g., Hamming Code).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Common Techniques</b></td>
+                                <td>Parity Check, Checksum, CRC.</td>
+                                <td>Hamming Code.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 2 Q15 -->
+                <div class="notebook-page fade-in question-container" data-marks="10" data-tags="cidr, subnetting, ip address">
+                    <div class="question-header">
+                        <span class="question-title">Q15. Write about CIDR. Also solve: IP is 200.1.2.0. Generate 4 subnets and state the IP range for each.</span>
+                        <span class="marks-badge">10 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>CIDR (Classless Inter-Domain Routing)</b> threw away the old strict rules of Class A, B, and C. Instead, it uses a slash (like /24 or /26) to tell the router exactly how many bits belong to the network. It stops the massive wastage of IP addresses!
+                        </div>
+                        
+                        <p><b>1. Solving the Subnetting Problem:</b><br>
+                        <b>Given IP:</b> <code>200.1.2.0</code> (This is a Class C address).<br>
+                        <b>Goal:</b> Divide this single network into <b>4 equal Subnets</b>.</p>
+                        
+                        <p><b>Step A: Find borrowed bits (n)</b><br>
+                        Formula: $2^n \ge \text{Number of Subnets}$<br>
+                        $2^n = 4 \implies n = 2$.<br>
+                        We must borrow 2 bits from the Host portion to create the subnets.</p>
+                        
+                        <p><b>Step B: Find the new Subnet Mask</b><br>
+                        Default Class C mask is <code>/24</code> (255.255.255.0).<br>
+                        New mask = $24 + 2 \text{ borrowed bits} = \text{/26}$.<br>
+                        In decimal: <code>255.255.255.192</code> (Because the first two bits of the last octet are 11000000 = 128 + 64 = 192).</p>
+                        
+                        <p><b>Step C: Find the Block Size (Jump Size)</b><br>
+                        Formula: $256 - \text{Subnet Mask Value}$<br>
+                        $256 - 192 = 64$.<br>
+                        Each subnet will have exactly 64 IP addresses.</p>
+                        
+                        <p><b>Step D: List the 4 Subnets and their Ranges:</b></p>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Subnet No.</th>
+                                <th>Network IP (First)</th>
+                                <th>Usable IP Range</th>
+                                <th>Broadcast IP (Last)</th>
+                            </tr>
+                            <tr>
+                                <td><b>Subnet 1</b></td>
+                                <td>200.1.2.<b>0</b></td>
+                                <td>200.1.2.1 to 200.1.2.62</td>
+                                <td>200.1.2.<b>63</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>Subnet 2</b></td>
+                                <td>200.1.2.<b>64</b></td>
+                                <td>200.1.2.65 to 200.1.2.126</td>
+                                <td>200.1.2.<b>127</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>Subnet 3</b></td>
+                                <td>200.1.2.<b>128</b></td>
+                                <td>200.1.2.129 to 200.1.2.190</td>
+                                <td>200.1.2.<b>191</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>Subnet 4</b></td>
+                                <td>200.1.2.<b>192</b></td>
+                                <td>200.1.2.193 to 200.1.2.254</td>
+                                <td>200.1.2.<b>255</b></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div> <!-- End of Set 2 Container -->
+
+            <!-- SET 3 CONTAINER -->
+            <div id="set3-container" class="set-container">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin: 3rem 0 1.5rem 0;">
+                    <h2 id="set3" style="margin: 0; font-family: var(--font-ui);">📄 Practice Set - 3: The Safety Net Set</h2>
+                    <button class="action-btn no-print" onclick="printSet('set3-container')" style="background: var(--accent-color); color: white; border: none; padding: 8px 16px;">📥 Save Set 3 as PDF</button>
+                </div>
+
+                <!-- SET 3 Q1 -->
+                <div class="notebook-page fade-in question-container" data-marks="2" data-tags="client-server, peer-to-peer, p2p, architecture">
+                    <div class="question-header">
+                        <span class="question-title">Q1. Client-Server vs Peer-to-Peer (P2P) architecture.</span>
+                        <span class="marks-badge">2 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>Client-Server:</b> Like a restaurant. The customers (Clients) sit and order, and only the Kitchen (Server) prepares and provides the food.<br>
+                            <b>Peer-to-Peer (P2P):</b> A potluck dinner. Everyone brings food and shares with everyone else. There is no central kitchen.
+                        </div>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Client-Server Model</th>
+                                <th>Peer-to-Peer (P2P) Model</th>
+                            </tr>
+                            <tr>
+                                <td><b>Resource Allocation</b></td>
+                                <td>Centralized (Only the server provides resources).</td>
+                                <td>Decentralized (Every computer shares its own resources).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Security</b></td>
+                                <td><b>High</b> security because it is centrally managed.</td>
+                                <td><b>Low</b> security because every user manages their own device.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Scalability</b></td>
+                                <td>Highly scalable (easy to add more clients).</td>
+                                <td>Less scalable (network slows down with too many nodes).</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 3 Q2 -->
+                <div class="notebook-page fade-in question-container" data-marks="2" data-tags="guard band, modulation, fdm">
+                    <div class="question-header">
+                        <span class="question-title">Q2. Purpose of a guard band in modulation techniques.</span>
+                        <span class="marks-badge">2 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            Like the empty space between the fast lane and slow lane on a highway. It prevents cars (signals) from drifting into each other and crashing.
+                        </div>
+                        <p><b>1. Definition:</b> A <b>Guard Band</b> is a narrow, unused part of the frequency spectrum left empty between two adjacent communication channels.</p>
+                        <p><b>2. Main Purpose:</b> It is used in Frequency Division Multiplexing (FDM) to prevent signals from overlapping and mixing with each other, which causes <b>interference</b> (cross-talk).</p>
+                    </div>
+                </div>
+
+                <!-- SET 3 Q3 -->
+                <div class="notebook-page fade-in question-container" data-marks="2" data-tags="switch, hub, networking devices">
+                    <div class="question-header">
+                        <span class="question-title">Q3. Differentiate between SWITCH and HUB.</span>
+                        <span class="marks-badge">2 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>Hub:</b> A dumb mailman who photocopies your letter and shoves it into everyone's mailbox in the building, hoping the right person reads it.<br>
+                            <b>Switch:</b> A smart mailman who reads the exact name on the letter and delivers it only to that specific person's mailbox.
+                        </div>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Switch</th>
+                                <th>Hub</th>
+                            </tr>
+                            <tr>
+                                <td><b>Intelligence</b></td>
+                                <td><b>Intelligent</b> device (Understands MAC addresses).</td>
+                                <td><b>Dumb</b> device (Cannot read MAC addresses).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Data Transmission</b></td>
+                                <td>Sends data <b>only</b> to the specific destination port (Unicast).</td>
+                                <td>Sends data to <b>all</b> connected ports (Broadcast).</td>
+                            </tr>
+                            <tr>
+                                <td><b>OSI Layer</b></td>
+                                <td>Operates at Layer 2 (Data Link Layer).</td>
+                                <td>Operates at Layer 1 (Physical Layer).</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 3 Q4 -->
+                <div class="notebook-page fade-in question-container" data-marks="2" data-tags="default mask, ip address, classful">
+                    <div class="question-header">
+                        <span class="question-title">Q4. Default mask value of an IP address.</span>
+                        <span class="marks-badge">2 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="exam-note">
+                            <i>Note: This is a duplicate question from Practice Set 2. Here is a brief recap.</i>
+                        </div>
+                        <p><b>1. Definition:</b> The <b>Default Subnet Mask</b> is the standard subnet mask automatically assigned to an IP address based on its Class (in classful addressing).</p>
+                        <p><b>2. Main Values:</b><br>
+                        - <b>Class A:</b> 255.0.0.0 (Supports large networks).<br>
+                        - <b>Class B:</b> 255.255.0.0 (Supports medium networks).<br>
+                        - <b>Class C:</b> 255.255.255.0 (Supports small networks).</p>
+                    </div>
+                </div>
+
+                <!-- SET 3 Q5 -->
+                <div class="notebook-page fade-in question-container" data-marks="2" data-tags="broadcasting, multicasting">
+                    <div class="question-header">
+                        <span class="question-title">Q5. Differentiate between broadcasting and multicasting.</span>
+                        <span class="marks-badge">2 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>Broadcasting:</b> A principal making an announcement on the school loudspeaker (everyone hears it).<br>
+                            <b>Multicasting:</b> A teacher sending a WhatsApp message to only the "Math Club" group chat (only specific interested people hear it).
+                        </div>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Broadcasting</th>
+                                <th>Multicasting</th>
+                            </tr>
+                            <tr>
+                                <td><b>Definition</b></td>
+                                <td>Sending one message to <b>all</b> devices on the network.</td>
+                                <td>Sending one message to a <b>specific group</b> of devices on the network.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Relationship</b></td>
+                                <td>One-to-All communication.</td>
+                                <td>One-to-Many communication.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Bandwidth</b></td>
+                                <td>Wastes bandwidth if computers don't need the data.</td>
+                                <td>Saves bandwidth by targeting only receivers who requested it.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 3 Q6 -->
+                <div class="notebook-page fade-in question-container" data-marks="2" data-tags="bit stuffing, character stuffing, framing">
+                    <div class="question-header">
+                        <span class="question-title">Q6. Difference between bit stuffing and character stuffing.</span>
+                        <span class="marks-badge">2 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            Both are tricks to prevent actual data from accidentally looking like the "End of File" marker.<br>
+                            <b>Bit Stuffing</b> adds a single '0' digit. <b>Character Stuffing</b> adds an entire 'Escape' word.
+                        </div>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Bit Stuffing</th>
+                                <th>Character (Byte) Stuffing</th>
+                            </tr>
+                            <tr>
+                                <td><b>Definition</b></td>
+                                <td>Inserting a single extra <b>bit (usually 0)</b> into the data stream to prevent it from looking like a flag.</td>
+                                <td>Inserting an extra <b>escape character (byte)</b> into the data stream to distinguish data from flags.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Usage</b></td>
+                                <td>Used in bit-oriented protocols (like HDLC).</td>
+                                <td>Used in byte-oriented protocols (like PPP).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Efficiency</b></td>
+                                <td>More efficient (adds only 1 bit).</td>
+                                <td>Less efficient (adds an entire 8-bit byte).</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 3 Q7 -->
+                <div class="notebook-page fade-in question-container" data-marks="2" data-tags="nyquist theorem, bit rate, noiseless">
+                    <div class="question-header">
+                        <span class="question-title">Q7. State Nyquist theorem.</span>
+                        <span class="marks-badge">2 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            The Nyquist Theorem proves that even if a wire is 100% perfect (zero noise), its maximum speed is still limited by its physical thickness (bandwidth). You can't force a million gallons of water through a straw!
+                        </div>
+                        <p><b>1. Definition:</b> The <b>Nyquist Theorem</b> gives the formula to calculate the maximum data rate (capacity) of a <b>noiseless</b> (perfect) channel.</p>
+                        <p><b>2. Formula:</b><br>
+                        <b>Bit Rate = 2 × Bandwidth × log<sub>2</sub>(L)</b></p>
+                        <p><b>3. Explanation of Terms:</b><br>
+                        - <b>Bandwidth:</b> The frequency range of the channel (in Hz).<br>
+                        - <b>L:</b> The number of signal levels used to represent data.</p>
+                    </div>
+                </div>
+
+                <!-- SET 3 Q8 -->
+                <div class="notebook-page fade-in question-container" data-marks="2" data-tags="transmission media, communication">
+                    <div class="question-header">
+                        <span class="question-title">Q8. What is transmission media?</span>
+                        <span class="marks-badge">2 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            It's the actual road that the data travels on. It can be a paved highway (cables) or airplanes flying through the sky (wireless).
+                        </div>
+                        <p><b>1. Definition:</b> <b>Transmission Media</b> is the physical path or channel through which data travels from a sender to a receiver in a network.</p>
+                        <p><b>2. Types:</b><br>
+                        - <b>Guided (Wired) Media:</b> Uses physical wires (e.g., Twisted Pair cable, Coaxial cable, Fiber Optics).<br>
+                        - <b>Unguided (Wireless) Media:</b> Uses open air/space to transmit electromagnetic waves (e.g., Wi-Fi, Bluetooth, Radio waves).</p>
+                    </div>
+                </div>
+
+                <!-- SET 3 Q9 -->
+                <div class="notebook-page fade-in question-container" data-marks="5" data-tags="aloha, csma/cd, mac, collision">
+                    <div class="question-header">
+                        <span class="question-title">Q9. Pure ALOHA vs CSMA/CD.</span>
+                        <span class="marks-badge">5 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>Pure ALOHA:</b> A bunch of blindfolded people in a room shouting whenever they want. A lot of voices crash (collide) and nobody hears anything.<br>
+                            <b>CSMA/CD:</b> People who take off their blindfolds, <i>listen</i> to see if someone else is talking first, and if two people accidentally start talking at the exact same time, they both stop and wait before trying again.
+                        </div>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Pure ALOHA</th>
+                                <th>CSMA/CD (Carrier Sense Multiple Access / Collision Detection)</th>
+                            </tr>
+                            <tr>
+                                <td><b>Carrier Sensing (Listening)</b></td>
+                                <td>No. Stations transmit data blindly whenever they want.</td>
+                                <td>Yes. Stations "listen" to the wire before transmitting.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Collision Detection</b></td>
+                                <td>No. Sender only finds out after waiting for an ACK that never comes.</td>
+                                <td>Yes. If a collision occurs while transmitting, it stops immediately.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Maximum Efficiency</b></td>
+                                <td>Very low (around 18.4%).</td>
+                                <td>Much higher (can reach 90% under light loads).</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 3 Q10 -->
+                <div class="notebook-page fade-in question-container" data-marks="5" data-tags="hdlc, frame, bit stuffing">
+                    <div class="question-header">
+                        <span class="question-title">Q10. What is the HDLC Frame format? What is the necessity of bit stuffing?</span>
+                        <span class="marks-badge">5 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>HDLC</b> is just the specific envelope used to send mail on certain networks. It has a strict layout (Flag, Address, Control, Data, FCS, Flag).<br>
+                            <b>Bit Stuffing</b> is needed so that if your actual letter happens to contain the exact word "Flag" inside it, the mailman doesn't accidentally think the letter ended early!
+                        </div>
+                        <p><b>1. HDLC Frame Format:</b><br>
+                        HDLC (High-Level Data Link Control) frames consist of 6 fields:</p>
+                        <table class="comparison-table" style="text-align: center;">
+                            <tr>
+                                <th>Flag (8 bits)</th>
+                                <th>Address (8 bits)</th>
+                                <th>Control (8/16 bits)</th>
+                                <th>Data/Payload (Variable)</th>
+                                <th>FCS / CRC (16/32 bits)</th>
+                                <th>Flag (8 bits)</th>
+                            </tr>
+                        </table>
+                        <p>- <b>Flag:</b> Marks the start and end of the frame (always <code>01111110</code>).<br>
+                        - <b>FCS:</b> Frame Check Sequence (used for Error Detection).</p>
+                        
+                        <p><b>2. Necessity of Bit Stuffing:</b><br>
+                        Since the Flag is exactly <code>01111110</code> (six 1s in a row), what happens if the user's actual Data happens to contain six 1s? The receiver will falsely think the frame has ended! <br>
+                        To prevent this, the sender uses <b>Bit Stuffing:</b> It automatically inserts a '0' after every five consecutive '1's in the data. The receiver removes these extra '0's to get the original data.</p>
+                    </div>
+                </div>
+
+                <!-- SET 3 Q11 -->
+                <div class="notebook-page fade-in question-container" data-marks="5" data-tags="guided media, unguided media, wired, wireless">
+                    <div class="question-header">
+                        <span class="question-title">Q11. Guided media vs Unguided media.</span>
+                        <span class="marks-badge">5 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>Guided (Wired):</b> A train on a physical track. It can only go where the track takes it.<br>
+                            <b>Unguided (Wireless):</b> A radio broadcast. It flies through the air in all directions and anyone with an antenna can pick it up.
+                        </div>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Guided Media (Wired)</th>
+                                <th>Unguided Media (Wireless)</th>
+                            </tr>
+                            <tr>
+                                <td><b>Signal Confinement</b></td>
+                                <td>Signals are confined to a physical wire/cable.</td>
+                                <td>Signals are broadcasted freely through the air/vacuum.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Directionality</b></td>
+                                <td>Highly directional (Point-to-Point).</td>
+                                <td>Can be omni-directional (spreads everywhere).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Security</b></td>
+                                <td>More secure (harder to tap a physical cable).</td>
+                                <td>Less secure (anyone in range can intercept the signal).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Examples</b></td>
+                                <td>Twisted Pair, Coaxial Cable, Fiber Optics.</td>
+                                <td>Wi-Fi, Bluetooth, Satellite Microwave.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 3 Q12 -->
+                <div class="notebook-page fade-in question-container" data-marks="5" data-tags="multiplexing, multi-level, multi-slot, tdm">
+                    <div class="question-header">
+                        <span class="question-title">Q12. Multi-level vs Multi-slot multiplexing.</span>
+                        <span class="marks-badge">5 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            Both are tricks used when combining different-speed cables into one big cable (TDM).<br>
+                            <b>Multi-level:</b> Combining 2 slow rivers into 1 medium river, before joining the giant ocean.<br>
+                            <b>Multi-slot:</b> Giving a very fast sports car 2 parking spaces (slots) because it needs to get out twice as fast as the normal cars.
+                        </div>
+                        <p>These techniques are used in Time Division Multiplexing (TDM) when the input lines have different data rates.</p>
+                        
+                        <p><b>1. Multi-level Multiplexing:</b><br>
+                        Used when the data rate of an input line is a <b>fraction</b> of the others.<br>
+                        <i>Example:</i> If you have two 20 kbps lines and one 40 kbps line, you first multiplex the two 20 kbps lines together to create a single 40 kbps line. Now you have two equal 40 kbps lines that can be multiplexed normally.</p>
+                        
+                        <p><b>2. Multi-slot Multiplexing (Pulse Stuffing):</b><br>
+                        Used when the data rate of an input line is a <b>multiple</b> of the others.<br>
+                        <i>Example:</i> If one line is 100 kbps and the others are 50 kbps, the faster line is assigned <b>two slots</b> per frame instead of one, allowing it to transmit its data at its natural faster speed.</p>
+                    </div>
+                </div>
+
+                <!-- SET 3 Q13 -->
+                <div class="notebook-page fade-in question-container" data-marks="5" data-tags="network layer, transport layer, osi">
+                    <div class="question-header">
+                        <span class="question-title">Q13. Main function of network layer. Network layer vs Transport layer.</span>
+                        <span class="marks-badge">5 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>Network Layer (The Post Office):</b> Figures out how to get a package from New York to London using IP addresses and Routers.<br>
+                            <b>Transport Layer (The Delivery Guy):</b> Takes the package, makes sure nothing broke inside, and hands it directly to "Apartment 4B" (Port numbers).
+                        </div>
+                        <p><b>Main Function of Network Layer:</b><br>
+                        <b>Routing:</b> Finding the shortest, most optimal path across multiple different networks to deliver a packet from the source IP to the destination IP.</p>
+                        
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Network Layer (Layer 3)</th>
+                                <th>Transport Layer (Layer 4)</th>
+                            </tr>
+                            <tr>
+                                <td><b>Delivery Type</b></td>
+                                <td><b>Host-to-Host</b> delivery (Computer to Computer).</td>
+                                <td><b>Process-to-Process</b> delivery (App to App, e.g., Chrome to Web Server).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Addressing Used</b></td>
+                                <td>Logical Addresses (<b>IP Addresses</b>).</td>
+                                <td>Port Addresses (<b>Port Numbers</b>).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Data Unit Name</b></td>
+                                <td>Packets / Datagrams.</td>
+                                <td>Segments.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Reliability</b></td>
+                                <td>Does not guarantee delivery (Best-effort).</td>
+                                <td>Guarantees complete delivery (using TCP).</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 3 Q14 -->
+                <div class="notebook-page fade-in question-container" data-marks="5" data-tags="tdm, tdma, time division, multiplexing, multiple access">
+                    <div class="question-header">
+                        <span class="question-title">Q14. Describe TDM. How does it differ from TDMA?</span>
+                        <span class="marks-badge">5 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>TDM (Multiplexing):</b> A TV showing 4 different camera angles by rapidly switching between them 10 times a second. It's done by one machine.<br>
+                            <b>TDMA (Multiple Access):</b> 4 different people sharing 1 megaphone by taking turns talking for 10 seconds each. It's done by multiple independent users.
+                        </div>
+                        <p><b>1. Time Division Multiplexing (TDM):</b><br>
+                        It is a technique where multiple data streams are combined into a single physical link by dividing the bandwidth into time slots. The entire bandwidth is given to one user, but only for a fraction of a second (round-robin fashion).</p>
+                        
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>TDM (Time Division Multiplexing)</th>
+                                <th>TDMA (Time Division Multiple Access)</th>
+                            </tr>
+                            <tr>
+                                <td><b>Location</b></td>
+                                <td>Usually happens at a <b>single point</b> (a multiplexer machine combining wires).</td>
+                                <td>Happens across a <b>shared medium</b> with physically separated users (e.g., cell phones sharing a tower).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Layer</b></td>
+                                <td>Physical Layer (Layer 1).</td>
+                                <td>Data Link Layer - MAC sublayer (Layer 2).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Usage</b></td>
+                                <td>Combining phone lines in a telecom office.</td>
+                                <td>Used in 2G GSM cellular networks allowing phones to share airspace.</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 3 Q15 -->
+                <div class="notebook-page fade-in question-container" data-marks="10" data-tags="guided media, twisted pair, coaxial, optical fiber">
+                    <div class="question-header">
+                        <span class="question-title">Q15. What is Guided media? Discuss types. Advantages & disadvantages of Optical Fiber.</span>
+                        <span class="marks-badge">10 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>Guided Media</b> simply means "Cables". It guides the signal physically from point A to point B.
+                        </div>
+                        
+                        <p><b>1. Types of Guided Media:</b></p>
+                        <ul>
+                            <li><b>Twisted Pair Cable:</b> Two copper wires twisted around each other to cancel out electromagnetic interference. Used in old telephones and modern LANs (Ethernet/CAT6).</li>
+                            <li><b>Coaxial Cable:</b> A central copper wire surrounded by an insulating layer and a braided metal shield. Used primarily for Cable TV connections.</li>
+                            <li><b>Optical Fiber:</b> A thin glass/plastic strand that transmits data using pulses of light (lasers/LEDs) using Total Internal Reflection. Used for high-speed internet backbones.</li>
+                        </ul>
+
+                        <p><b>2. Optical Fiber (Advantages & Disadvantages):</b></p>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Advantages of Optical Fiber</th>
+                                <th>Disadvantages of Optical Fiber</th>
+                            </tr>
+                            <tr>
+                                <td><b>Infinite Bandwidth:</b> Can carry terabits of data per second.</td>
+                                <td><b>High Cost:</b> The cables and optical transmitters are extremely expensive.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Immunity to Noise:</b> Not affected by electromagnetic interference (EMI) because it uses light, not electricity.</td>
+                                <td><b>Fragile:</b> Glass fibers can break easily if bent too sharply.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Low Attenuation:</b> Signals can travel dozens of kilometers without needing a repeater/amplifier.</td>
+                                <td><b>Difficult Installation:</b> Splicing (joining) two glass fibers requires microscopic precision and expensive tools.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Security:</b> Very difficult to tap into a light signal without being detected.</td>
+                                <td><b>Unidirectional:</b> A single fiber usually only sends light in one direction (need two for 2-way).</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- SET 3 Q16 -->
+                <div class="notebook-page fade-in question-container" data-marks="10" data-tags="switching, circuit switching, packet switching">
+                    <div class="question-header">
+                        <span class="question-title">Q16. Switching Technique & its Adv/Disadv. Compare Packet Switching and Circuit Switching.</span>
+                        <span class="marks-badge">10 Marks</span>
+                    </div>
+                    <div class="answer-content">
+                        <div class="explain-simple">
+                            <b>Circuit Switching:</b> Like a VIP train track. The entire track is reserved just for your train from start to finish. Nobody else can use it until you arrive.<br>
+                            <b>Packet Switching:</b> Like sending a book via the post office by mailing each page in a separate envelope. They all take different roads, get mixed up with other people's mail, and are reassembled by the receiver.
+                        </div>
+                        
+                        <p><b>1. What is Switching?</b><br>
+                        In a network with thousands of computers, it's impossible to connect every computer directly to every other computer. Instead, computers connect to "Switches", and switches figure out how to route the data. Switching is the process of forwarding data from one port to another to reach the destination.</p>
+
+                        <p><b>2. Circuit Switching vs Packet Switching:</b></p>
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Circuit Switching</th>
+                                <th>Packet Switching</th>
+                            </tr>
+                            <tr>
+                                <td><b>Path Reservation</b></td>
+                                <td>A dedicated physical path is established before sending data.</td>
+                                <td>No dedicated path. Data is broken into packets which travel independently.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Bandwidth Wastage</b></td>
+                                <td><b>High.</b> If neither person talks, the line is still reserved and wasted.</td>
+                                <td><b>Zero.</b> Bandwidth is shared dynamically among all active users.</td>
+                            </tr>
+                            <tr>
+                                <td><b>Delay / Congestion</b></td>
+                                <td>Has initial setup delay, but zero delay during data transfer (no congestion).</td>
+                                <td>No setup delay, but packets can experience queuing delays at routers (congestion).</td>
+                            </tr>
+                            <tr>
+                                <td><b>Real-world Example</b></td>
+                                <td>Traditional Landline Telephone systems.</td>
+                                <td>The modern Internet (TCP/IP).</td>
+                            </tr>
+                        </table>
+
+                        <p><b>3. Advantages & Disadvantages Summary:</b><br>
+                        - <b>Circuit Switching</b> is excellent for guaranteed, continuous real-time data (like a voice call) because there is no delay, but it is terribly inefficient and expensive.<br>
+                        - <b>Packet Switching</b> is highly efficient, cheap, and resilient (if a router dies, packets just take another road), but it suffers from unpredictable delays and out-of-order delivery.</p>
+                    </div>
+                </div>
+            </div> <!-- End of Set 3 Container -->
+
+        </main>
+    </div>
+
+    <script>
+        // JS features unchanged for simplicity
+        window.onscroll = function() {
+            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            let scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+        function toggleTheme() {
+            const html = document.documentElement;
+            html.setAttribute('data-theme', html.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+        }
+        function searchContent() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let questions = document.getElementsByClassName('question-container');
+            for (let i = 0; i < questions.length; i++) {
+                let text = questions[i].innerText.toLowerCase();
+                let tags = questions[i].getAttribute('data-tags');
+                if (text.includes(input) || (tags && tags.includes(input))) {
+                    questions[i].style.display = "block";
+                } else {
+                    questions[i].style.display = "none";
+                }
+            }
+        }
+        function copyAnswer(btn) {
+            let answerContent = btn.closest('.notebook-page').querySelector('.answer-content').innerText;
+            navigator.clipboard.writeText(answerContent).then(() => {
+                let originalText = btn.innerHTML;
+                btn.innerHTML = "✅ Copied!";
+                btn.style.background = "#43e97b"; btn.style.color = "white";
+                setTimeout(() => { btn.innerHTML = originalText; btn.style.background = ""; btn.style.color = ""; }, 2000);
+            });
+        }
+        let currentFontSize = 1.15;
+        function increaseFontSize() {
+            if(currentFontSize < 1.6) {
+                currentFontSize += 0.1;
+                document.querySelectorAll('.notebook-page').forEach(page => page.style.fontSize = currentFontSize + 'rem');
+            }
+        }
+        function decreaseFontSize() {
+            if(currentFontSize > 0.9) {
+                currentFontSize -= 0.1;
+                document.querySelectorAll('.notebook-page').forEach(page => page.style.fontSize = currentFontSize + 'rem');
+            }
+        }
+        function printSet(containerId) {
+            let allSets = document.querySelectorAll('.set-container');
+            let intro = document.querySelector('.intro-card');
+            
+            // Hide everything else
+            allSets.forEach(set => set.style.display = 'none');
+            if(intro) intro.style.display = 'none';
+            
+            // Show only the target
+            document.getElementById(containerId).style.display = 'block';
+            
+            // Print (Save as PDF)
+            setTimeout(() => {
+                window.print();
+                
+                // Restore visibility
+                allSets.forEach(set => set.style.display = 'block');
+                if(intro) intro.style.display = 'block';
+            }, 150);
+        }
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(element => observer.observe(element));
+
+        // SMART FILTER & PYQ ANALYTICS LOGIC
+        const highYieldTags = ["encoding", "nrz", "rz", "attenuation", "distortion", "baud", "bit rate", "nyquist", "guard band", "stop and wait", "arq", "go back n", "go-back-n", "piggybacking", "hdlc", "guided", "unguided", "optical fiber", "topology", "osi", "tcp/ip", "model", "ip address", "subnetting", "cidr", "classful", "classless", "mask", "multiplexing", "fdm", "tdm"];
+        const mediumYieldTags = ["mac", "aloha", "csma", "hamming", "crc", "checksum", "routing", "arp", "tcp", "udp", "switch", "hub", "bridge", "network layer", "transport layer"];
+
+        document.querySelectorAll('.question-container').forEach(container => {
+            const tags = container.getAttribute('data-tags').toLowerCase();
+            let priority = "low";
+            
+            for(let tag of highYieldTags) {
+                if(tags.includes(tag)) { priority = "high"; break; }
+            }
+            if(priority === "low") {
+                for(let tag of mediumYieldTags) {
+                    if(tags.includes(tag)) { priority = "medium"; break; }
+                }
+            }
+            
+            container.setAttribute('data-priority', priority);
+            const titleSpan = container.querySelector('.question-title');
+            if(priority === "high") {
+                titleSpan.innerHTML = `<span style="color:#e74c3c; font-weight:bold;">[🔥 80/20 HIT LIST]</span> ` + titleSpan.innerHTML;
+            } else if(priority === "medium") {
+                titleSpan.innerHTML = `<span style="color:#f39c12; font-weight:bold;">[⭐ MEDIUM YIELD]</span> ` + titleSpan.innerHTML;
+            } else {
+                titleSpan.innerHTML = `<span style="color:#7f8c8d; font-weight:bold;">[📚 LOW YIELD]</span> ` + titleSpan.innerHTML;
+            }
+        });
+
+        function filterQuestions(level) {
+            let allSets = document.querySelectorAll('.set-container');
+            let intro = document.querySelector('.intro-card');
+            
+            if(level === 'all') {
+                allSets.forEach(set => set.style.display = 'block');
+                if(intro) intro.style.display = 'block';
+                document.querySelectorAll('.question-container').forEach(q => {
+                    q.style.display = 'block';
+                });
+            } else if(level === 'high') {
+                allSets.forEach(set => set.style.display = 'block');
+                if(intro) intro.style.display = 'none'; // hide welcome to focus on strategy
+                document.querySelectorAll('.question-container').forEach(q => {
+                    if(q.getAttribute('data-priority') === 'high') {
+                        q.style.display = 'block';
+                    } else {
+                        q.style.display = 'none';
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
